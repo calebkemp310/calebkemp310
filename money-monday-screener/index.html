@@ -1,0 +1,338 @@
+<title>Money Monday Screener</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a premarket worksheet. Rules strip on top, live filter bar, scored tape table, then the Webull setup and the morning routine. */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #17202c;
+  --muted: #5a6677;
+  --line: #d9dee6;
+  --accent: #c2560f;        /* opening-bell amber */
+  --accent-soft: #fbe9dc;
+  --pass: #17794a;
+  --pass-soft: #dff3e8;
+  --fail: #b3261e;
+  --fail-soft: #fbe3e1;
+  --warn: #8a5a00;
+  --warn-soft: #fbf0d2;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161d; --surface: #19202a; --ink: #e6eaf0; --muted: #98a3b3; --line: #2c3542;
+    --accent: #f08a43; --accent-soft: #3a2616;
+    --pass: #4cc787; --pass-soft: #163325; --fail: #f2766d; --fail-soft: #3a1c1a;
+    --warn: #e6b450; --warn-soft: #362a12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161d; --surface: #19202a; --ink: #e6eaf0; --muted: #98a3b3; --line: #2c3542;
+  --accent: #f08a43; --accent-soft: #3a2616;
+  --pass: #4cc787; --pass-soft: #163325; --fail: #f2766d; --fail-soft: #3a1c1a;
+  --warn: #e6b450; --warn-soft: #362a12;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px; }
+h1, h2 { font-family: var(--display); font-weight: 700; letter-spacing: .01em; text-wrap: balance; margin: 0; line-height: 1.05; }
+h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); }
+h2 { font-size: 1.9rem; }
+p { margin: 0; }
+.eyebrow { font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); font-weight: 600; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+header { display: flex; flex-direction: column; gap: 10px; }
+header .stamp { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+header .lede { max-width: 68ch; font-size: 1.05rem; }
+
+/* Rules strip */
+.rules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.rule { padding: 16px 18px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.rule:last-child { border-right: 0; }
+.rule .k { font-family: var(--display); font-size: 1.35rem; font-weight: 700; }
+.rule .v { font-family: var(--mono); font-size: .85rem; color: var(--accent); font-weight: 600; }
+.rule p { font-size: .92rem; color: var(--muted); }
+.house { display: flex; flex-wrap: wrap; gap: 8px; }
+.house span { font-size: .88rem; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
+
+/* Filter bar */
+.filters { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: flex-end; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.filters label { display: flex; flex-direction: column; gap: 4px; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+.filters input[type="number"] { width: 92px; font: 600 .95rem var(--mono); padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.filters .check { flex-direction: row; align-items: center; gap: 8px; text-transform: none; letter-spacing: 0; font-size: .95rem; color: var(--ink); padding-bottom: 6px; }
+.filters input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filters .count { margin-left: auto; font-family: var(--mono); font-size: .85rem; color: var(--muted); padding-bottom: 6px; }
+button.reset { font: 600 .85rem var(--body); padding: 7px 12px; border-radius: 6px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+button.reset:hover { border-color: var(--accent); }
+
+/* Table */
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 980px; }
+th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .72rem; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); font-weight: 700; background: var(--bg); position: sticky; top: 0; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+tr.out td { opacity: .45; }
+.tick { font-family: var(--mono); font-weight: 600; font-size: 1rem; }
+.co { display: block; font-size: .8rem; color: var(--muted); }
+.up { color: var(--pass); } .down { color: var(--fail); }
+.score { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; padding: 3px 8px; border-radius: 6px; font: 700 .9rem var(--mono); }
+.s4 { background: var(--pass-soft); color: var(--pass); }
+.s3 { background: var(--warn-soft); color: var(--warn); }
+.slow { background: var(--fail-soft); color: var(--fail); }
+.dots { display: flex; gap: 4px; margin-top: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 2px; background: var(--fail); }
+.dot.ok { background: var(--pass); }
+.dot.unk { background: var(--warn); }
+.cat { font-size: .9rem; max-width: 34ch; }
+.flag { display: block; font-size: .85rem; color: var(--warn); margin-top: 4px; max-width: 40ch; }
+.flag.red { color: var(--fail); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .82rem; color: var(--muted); }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+/* Two-column lower section */
+.lower { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+.panel { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.settings { width: 100%; border-collapse: collapse; min-width: 0; }
+.settings td { padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+.settings td:first-child { color: var(--muted); padding-right: 12px; }
+.settings td:last-child { font-family: var(--mono); font-weight: 600; text-align: right; }
+ol.steps { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 10px; }
+ol.steps li { padding-left: 4px; }
+ol.steps b { font-family: var(--mono); font-size: .88rem; color: var(--accent); }
+.note { font-size: .9rem; color: var(--muted); max-width: 68ch; }
+footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; max-width: 80ch; }
+
+@media (max-width: 820px) {
+  .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rule:nth-child(2) { border-right: 0; }
+  .rule:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .lower { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 460px) {
+  .rules { grid-template-columns: minmax(0, 1fr); }
+  .rule { border-right: 0; border-bottom: 1px solid var(--line); }
+  .rule:last-child { border-bottom: 0; }
+  .filters .count { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Money Monday · Webull screener</span>
+    <h1>Money Monday Screener</h1>
+    <div class="stamp">
+      <span>Week of Mon Oct 26, 2026</span>
+      <span>Data: Webull, Fri Oct 23 close + after-hours</span>
+      <span>Premarket opens 4:00 ET. Re-run then.</span>
+    </div>
+    <p class="lede">Low-float stocks with fresh news after the weekend. A name has to pass all four checks before it goes on the Monday watchlist. Your own rules sit under the checks.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="rules-h">
+    <h2 id="rules-h">The four checks</h2>
+    <div class="rules">
+      <div class="rule"><span class="k">News catalyst</span><span class="v">fresh PR / 8-K / contract</span><p>Real company news since Friday. No PR means no trade, even if it is running.</p></div>
+      <div class="rule"><span class="k">Unusual volume</span><span class="v">RVOL ≥ 5× or float turned ≥ 2×</span><p>Volume against the 10-day average, or shares traded divided by float.</p></div>
+      <div class="rule"><span class="k">Low float</span><span class="v">≤ 10M shares · A+ ≤ 1M</span><p>Low supply makes the spike. WORX ran 210% on a 741k float.</p></div>
+      <div class="rule"><span class="k">Price range</span><span class="v">$1 – $20 · up ≥ 10%</span><p>Under $1 is a sub-penny trap. A low price alone never earns a spot.</p></div>
+    </div>
+    <div class="house" aria-label="House rules">
+      <span>Don't chase the first spike</span>
+      <span>Holds VWAP = setup intact</span>
+      <span>Loses VWAP = faded runner, pass</span>
+      <span>Size light before FOMC Wed Oct 28</span>
+      <span>Check for dilution before buying</span>
+    </div>
+    <p class="note">Bohen's own checklist names a news catalyst and unusual volume as two of his four conditions. Low float and the price range fill out the other two here, taken from the Monday spike examples in your newsletters and your Sunday brief.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="scan-h">
+    <h2 id="scan-h">Monday tape: the scan</h2>
+    <div class="filters" role="group" aria-label="Screener filters">
+      <label for="fFloat">Max float (M)<input id="fFloat" type="number" min="0" step="0.5" value="10"></label>
+      <label for="fPmin">Min price $<input id="fPmin" type="number" min="0" step="0.5" value="1"></label>
+      <label for="fPmax">Max price $<input id="fPmax" type="number" min="0" step="1" value="20"></label>
+      <label for="fChg">Min % up Fri<input id="fChg" type="number" min="0" step="5" value="10"></label>
+      <label class="check" for="fNews"><input id="fNews" type="checkbox"> Require fresh news</label>
+      <label class="check" for="fHide"><input id="fHide" type="checkbox" checked> Hide names that fail</label>
+      <button class="reset" id="reset" type="button">Reset to Money Monday</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--pass)"></i>passes</span>
+      <span><i style="background:var(--warn)"></i>unconfirmed</span>
+      <span><i style="background:var(--fail)"></i>fails</span>
+      <span>Dots in order: news · volume · float · price</span>
+    </div>
+    <div class="tablebox">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th class="num">Score</th>
+            <th class="num">Last (AH)</th>
+            <th class="num">Fri chg</th>
+            <th class="num">Float</th>
+            <th class="num">RVOL</th>
+            <th class="num">Float turn</th>
+            <th>Catalyst</th>
+            <th>Watch for</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note">Float is Webull's outstanding share count. Float turn is Friday volume divided by float. RVOL is Webull's 10-day relative volume, shown only where Webull ranked it.</p>
+  </section>
+
+  <section class="lower">
+    <div class="panel" aria-labelledby="wb-h">
+      <h2 id="wb-h">Build it in Webull</h2>
+      <ol class="steps">
+        <li>Open Webull, tap <b>Markets</b>, then <b>Screeners</b> (desktop: <b>Screener</b> in the left bar). Start a new custom screener.</li>
+        <li>Add the filters below, then save it as <b>Money Monday</b>.</li>
+        <li>From 4:00 ET Monday, sort the results by <b>% Change</b> and cross-check with <b>Top Gainers → Pre-market</b>.</li>
+        <li>Open the news tab on every name. No fresh PR, drop it.</li>
+      </ol>
+      <table class="settings">
+        <tbody>
+          <tr><td>Price</td><td>$1.00 – $20.00</td></tr>
+          <tr><td>% Change</td><td>≥ 10%</td></tr>
+          <tr><td>Float shares</td><td>≤ 10M</td></tr>
+          <tr><td>Market cap (if no float filter)</td><td>≤ $100M</td></tr>
+          <tr><td>Volume</td><td>≥ 500K</td></tr>
+          <tr><td>Volume ratio / RVOL</td><td>≥ 5</td></tr>
+          <tr><td>Exchange</td><td>NASDAQ, NYSE, AMEX</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Filter names differ a little between the phone app and desktop. If your version has no float filter, use market cap as the stand-in and check float on each ticker's quote page.</p>
+    </div>
+
+    <div class="panel" aria-labelledby="am-h">
+      <h2 id="am-h">Monday morning routine</h2>
+      <ol class="steps">
+        <li><b>4:00</b> Run the screener. Note every gapper ≥ 10% with a PR.</li>
+        <li><b>7:00</b> Re-run. Keep names whose premarket volume is still building. Drop anything fading back to Friday's close.</li>
+        <li><b>8:30</b> Mark levels on the top 2–3: premarket high, Friday's high, VWAP.</li>
+        <li><b>9:30</b> Let the opening spike go. Look for the first pullback that holds VWAP.</li>
+        <li><b>Exit</b> Stop just under VWAP or the pullback low. Lose VWAP, get out.</li>
+        <li><b>After close</b> Log the trade in your Trading Journal agent.</li>
+      </ol>
+      <p class="note">FOMC decision is Wednesday Oct 28 at 2:00 ET and it's a heavy tech earnings week. Keep size small all week.</p>
+    </div>
+  </section>
+
+  <footer>Educational screener built from newsletter content and Webull market data. Not financial advice. These are extreme low-float movers that can drop 50% in minutes. Results shown in newsletters are not typical, and most traders lose money. Size small and always use a stop.</footer>
+</div>
+
+<script>
+// Scored from Webull snapshots and news, Fri Oct 23 2026 close and after-hours.
+// news: 1 pass, 0 fail, null unconfirmed. rvol null = not in Webull's ranking.
+const DATA = [
+  { t: "AIOK", co: "AI Okto Corp", last: 9.83, close: 12.02, chg: 182.8, ah: -18.3, float: 4.32, rvol: 7.9, turn: 9.3, news: 1,
+    cat: "$3.50 one-time special dividend and $18M vessel sale to Robin Energy (Fri 9:26 ET).",
+    watch: "Faded to $9.83 after hours, under Friday's $11.75 VWAP. Per your rule that is a faded runner until it reclaims $11.75. Upside reference $15.59.",
+    red: "Check the dividend ex-date. The price drops by about $3.50 that morning." },
+  { t: "BOLT", co: "Bolt Biotherapeutics", last: 6.86, close: 6.27, chg: 49.6, ah: 9.4, float: 1.87, rvol: 7.9, turn: 6.6, news: 1,
+    cat: "Reverse merger with Prana Therapies plus $120M private placement at $8.57 (Fri 9:17 ET). Closes Oct 26.",
+    watch: "Up 9% after hours and holding. Friday high $7.78 is the breakout level.",
+    red: "Share count grows a lot when the preferred converts. Low float won't last." },
+  { t: "BKYI", co: "BIO-key International", last: 3.27, close: 3.39, chg: 23.7, ah: -3.5, float: 1.31, rvol: null, turn: 24.4, news: 1,
+    cat: "Middle East government contract (Fri). Third move this month.",
+    watch: "Float traded 24× on Friday. Friday high $3.92.",
+    red: "Resale filing for 1.24M shares, about the whole float. Sellers are waiting." },
+  { t: "SPRC", co: "SciSparc", last: 1.91, close: 1.09, chg: -9.2, ah: 75.2, float: 0.58, rvol: null, turn: 10.3, news: null,
+    cat: "Up 75% after hours on 2.8M shares. No new PR in Webull's feed yet. Last news: Oct 22 trial update, Oct 15 AI pivot.",
+    watch: "Sub-1M float gapper. Becomes A+ only if a real PR posts premarket.",
+    red: "A note converted at $1.50 adds new shares that can sell into a spike. Webull's 581K share count may be stale after that conversion, so confirm the float." },
+  { t: "AIXI", co: "Xiao-I Corp", last: 2.83, close: 2.96, chg: 19.4, ah: -4.4, float: 0.57, rvol: null, turn: 29.6, news: 0,
+    cat: "No fresh PR. Q2 earnings came out about Oct 20.",
+    watch: "565k float traded almost 30× Friday. Multi-day runner, catalyst is stale.", red: "" },
+  { t: "CLRO", co: "ClearOne", last: 2.93, close: 3.25, chg: 69.3, ah: -9.8, float: 2.68, rvol: 7.8, turn: 13.7, news: 0,
+    cat: "No PR found. Only shows up in movers lists.",
+    watch: "Spiked to $4.69, closed $3.25, fading after hours.", red: "" },
+  { t: "JYD", co: "Jayud Global Logistics", last: 1.89, close: 1.83, chg: 32.6, ah: 3.3, float: 7.80, rvol: 5.1, turn: 0.43, news: 0,
+    cat: "No PR found.", watch: "Friday high $2.02.", red: "" },
+  { t: "HTCO", co: "High-Trend International", last: 1.43, close: 1.53, chg: 30.8, ah: -6.5, float: 5.84, rvol: null, turn: 0.38, news: 0,
+    cat: "No PR found.", watch: "Volume light against its float.", red: "" },
+  { t: "NIVF", co: "NewGenIvf Group", last: 1.36, close: 1.46, chg: 22.6, ah: -6.8, float: 1.08, rvol: null, turn: 0.96, news: 0,
+    cat: "No PR found.", watch: "",
+    red: "Serial diluter: offering at $0.07 on Oct 1 and repeated reverse splits. Avoid." },
+  { t: "LUCD", co: "Lucid Diagnostics", last: 0.41, close: 0.41, chg: 25.4, ah: -1.2, float: 152.6, rvol: 4.9, turn: 0.53, news: 0,
+    cat: "No PR found. On your Sunday watch list.",
+    watch: "Needs to reclaim $0.4223 VWAP, then $0.45.", red: "Fails float and price. Not a Money Monday name." }
+];
+
+const $ = id => document.getElementById(id);
+const DEFAULTS = { fFloat: 10, fPmin: 1, fPmax: 20, fChg: 10 };
+const fmt = (n, d = 2) => n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const sign = n => (n > 0 ? "+" : "") + fmt(n, 1) + "%";
+
+function checks(r, f) {
+  // The day's move counts if it came Friday or after hours.
+  const move = Math.max(r.chg, r.ah);
+  const vol = (r.rvol !== null && r.rvol >= 5) || r.turn >= 2;
+  return [
+    r.news === null ? null : r.news === 1,
+    vol,
+    r.float <= f.float,
+    r.last >= f.pmin && r.last <= f.pmax && move >= f.chg
+  ];
+}
+
+function render() {
+  const f = { float: +$("fFloat").value, pmin: +$("fPmin").value, pmax: +$("fPmax").value, chg: +$("fChg").value };
+  const needNews = $("fNews").checked, hide = $("fHide").checked;
+  const scored = DATA.map(r => {
+    const c = checks(r, f);
+    const score = c.filter(x => x === true).length;
+    const fails = c.filter(x => x === false).length;
+    const pass = needNews ? (c[0] === true && fails === 0) : fails <= (c[0] === false ? 1 : 0);
+    return { r, c, score, pass };
+  }).sort((a, b) => b.score - a.score || b.r.turn - a.r.turn);
+
+  let shown = 0;
+  $("rows").innerHTML = scored.map(({ r, c, score, pass }) => {
+    if (hide && !pass) return "";
+    shown++;
+    const cls = score === 4 ? "s4" : score === 3 ? "s3" : "slow";
+    const dots = c.map(x => `<span class="dot ${x === true ? "ok" : x === null ? "unk" : ""}"></span>`).join("");
+    return `<tr class="${pass ? "" : "out"}">
+      <td><span class="tick">${r.t}</span><span class="co">${r.co}</span></td>
+      <td class="num"><span class="score ${cls}">${score}/4</span><div class="dots" style="justify-content:flex-end">${dots}</div></td>
+      <td class="num">$${fmt(r.last)}<span class="co ${r.ah >= 0 ? "up" : "down"}">${sign(r.ah)} AH</span></td>
+      <td class="num ${r.chg >= 0 ? "up" : "down"}">${sign(r.chg)}</td>
+      <td class="num">${r.float < 1 ? fmt(r.float * 1000, 0) + "K" : fmt(r.float, 2) + "M"}</td>
+      <td class="num">${r.rvol === null ? "–" : fmt(r.rvol, 1) + "×"}</td>
+      <td class="num">${fmt(r.turn, 1)}×</td>
+      <td><div class="cat">${r.cat}</div></td>
+      <td><div class="cat">${r.watch}</div>${r.red ? `<span class="flag ${r.news === 0 || r.float > 10 ? "red" : ""}">${r.red}</span>` : ""}</td>
+    </tr>`;
+  }).join("");
+  if (!shown) $("rows").innerHTML = `<tr><td colspan="9" class="muted">Nothing passes these filters. Loosen max float or min % up, or untick “Hide names that fail”.</td></tr>`;
+  $("count").textContent = `${scored.filter(s => s.pass).length} of ${DATA.length} pass`;
+}
+
+["fFloat", "fPmin", "fPmax", "fChg", "fNews", "fHide"].forEach(id => $(id).addEventListener("input", render));
+$("reset").addEventListener("click", () => {
+  Object.entries(DEFAULTS).forEach(([k, v]) => ($(k).value = v));
+  $("fNews").checked = false; $("fHide").checked = true; render();
+});
+render();
+</script>
