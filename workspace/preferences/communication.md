@@ -1,5 +1,4 @@
 # Communication
 
-- Plain language; Caleb is still learning investing, so explain market jargon briefly when it comes up.
-- Keep answers concise and practical.
-- _Add/adjust as Caleb states preferences._
+General preferences live in Notion Memory ("Communication and Notion preferences").
+Add notes here only if they apply to this repo specifically.
