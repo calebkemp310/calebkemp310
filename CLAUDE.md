@@ -2,30 +2,38 @@
 
 ## MEMORY MANAGEMENT
 
-This repo uses structured memory folders. Treat them as the source of truth for context across sessions.
+Caleb uses ONE shared memory across every Claude app (Code, Cowork, Chat, Artifacts).
+There are two layers — each fact lives in exactly one of them:
+
+1. **Notion Memory (shared brain)** — who Caleb is, his preferences, and all projects
+   across apps. Reach it through the Notion connector.
+2. **This repo's memory folders** — notes that only matter for this repo
+   (code decisions, status, style).
 
 At the START of each session:
-- Read `memory/memory.md` for core context
-- Read the relevant files in `workspace/` (projects, preferences, knowledge-base)
+- Notion: fetch id `"memory"` (About page + Memories database); use memory search for specifics
+- Read `memory/memory.md`, then the relevant files in `workspace/`
 
 At the END of each session (or when meaningful work is finished):
-- Update `memory/memory.md` with key takeaways
-- Update the relevant workspace files with new decisions, progress, or information
-- Keep files concise: remove outdated info
-- Commit the memory updates along with the work
+- Personal or cross-project facts (preferences, goals, new projects, decisions that
+  affect other work) → update Notion Memory (search first; update the existing entry)
+- Repo-specific facts → update `memory/memory.md` and the relevant `workspace/` files,
+  and commit them with the work
+- Keep everything concise — remove outdated info
 
-NEVER duplicate information across files — each fact lives in one place.
+NEVER duplicate information across files or between the repo and Notion.
 ALWAYS prefer updating existing entries over adding new ones.
+If the Notion connector is unavailable, say so and continue with the repo files.
 
 ## Layout
 
 ```
-memory/memory.md                       agent's core memory (summary + pointers)
-workspace/projects/goals.md            what's being built & why
-workspace/projects/decisions.md        choices already made (dated, with reasoning)
-workspace/projects/current-status.md   where things stand now
-workspace/preferences/coding-style.md  formatting, naming, conventions
-workspace/preferences/communication.md how Caleb wants responses
+memory/memory.md                            core repo memory (summary + pointers)
+workspace/projects/goals.md                 what's being built & why
+workspace/projects/decisions.md             choices already made (dated, with reasoning)
+workspace/projects/current-status.md        where things stand now
+workspace/preferences/coding-style.md       formatting, naming, conventions
+workspace/preferences/communication.md      repo-specific response notes (general ones live in Notion)
 workspace/knowledge-base/research-notes.md  gathered information
 workspace/knowledge-base/reference-data.md  key reference material
 ```
