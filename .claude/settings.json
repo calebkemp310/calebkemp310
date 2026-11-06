@@ -5,6 +5,34 @@
         "source": "github",
         "repo": "anthropics/claude-code"
       }
+    },
+    "marketingskills": {
+      "source": {
+        "source": "github",
+        "repo": "coreyhaines31/marketingskills",
+        "ref": "v2.14.0"
+      }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+        "ref": "v2.15.0"
+      }
+    },
+    "taste-skill": {
+      "source": {
+        "source": "github",
+        "repo": "Leonxlnx/taste-skill",
+        "ref": "v2.5.0"
+      }
+    },
+    "humanizer": {
+      "source": {
+        "source": "github",
+        "repo": "blader/humanizer",
+        "ref": "v3.1.0"
+      }
     }
   },
   "enabledPlugins": {
@@ -16,6 +44,10 @@
     "agent-sdk-dev@claude-code-plugins": true,
     "explanatory-output-style@claude-code-plugins": true,
     "learning-output-style@claude-code-plugins": true,
-    "ralph-loop@claude-code-plugins": true
+    "ralph-loop@claude-code-plugins": true,
+    "marketing-skills@marketingskills": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "taste-skill@taste-skill": true,
+    "humanizer@humanizer": true
   }
 }
