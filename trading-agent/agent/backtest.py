@@ -31,16 +31,19 @@ class Result:
 
 def run(df: pd.DataFrame, signals: dict, costs: Costs = Costs(), weight: float = 1.0) -> Result:
     """signals: 'entry' and 'exit' boolean arrays aligned to df (known at bar close),
-    optional 'max_hold' (int bars, time stop)."""
+    optional 'max_hold' (int bars, time stop), optional 'weight' (fraction of
+    equity to commit, read at the signal bar's close; overrides `weight`)."""
     o = df["open"].to_numpy()
     c = df["close"].to_numpy()
     entry = np.asarray(signals["entry"], dtype=bool)
     exit_ = np.asarray(signals["exit"], dtype=bool)
     max_hold = signals.get("max_hold")
+    w_arr = signals.get("weight")
     n = len(df)
 
     cash, qty = 1.0, 0.0
     pending = 0          # +1 buy at next open, -1 sell at next open
+    pending_w = weight
     entry_px = entry_i = None
     entry_equity = None
     eq = np.empty(n)
@@ -51,7 +54,7 @@ def run(df: pd.DataFrame, signals: dict, costs: Costs = Costs(), weight: float =
         # 1) Fill whatever was decided at the previous close, at this bar's open.
         if pending == 1 and qty == 0:
             px = o[t] * (1 + costs.slip)
-            notional = cash * weight
+            notional = cash * pending_w
             qty = notional * (1 - costs.fee) / px
             cash -= notional
             entry_px, entry_i, entry_equity = px, t, cash + notional
@@ -73,6 +76,7 @@ def run(df: pd.DataFrame, signals: dict, costs: Costs = Costs(), weight: float =
             break
         if qty == 0 and entry[t]:
             pending = 1
+            pending_w = weight if w_arr is None else float(min(max(w_arr[t], 0.0), 1.0))
         elif qty > 0:
             held = t - entry_i + 1
             if exit_[t] or (max_hold is not None and held >= max_hold):

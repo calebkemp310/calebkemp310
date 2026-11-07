@@ -72,3 +72,57 @@ CANDIDATES = {
     "rsi2_dip": (rsi2_dip, "1d", _grid(threshold=[5, 10, 15, 20, 25])),
     "bollinger_revert_4h": (bollinger_revert, "4h", _grid(k=[1.5, 2.0, 2.5, 3.0])),
 }
+
+
+# ---------------------------------------------------------------------------
+# Round 2 (widened search). Pre-registered 2026-11-07 before any round-2 run.
+# Every grid point below adds to the trial count used by the deflated Sharpe.
+# ---------------------------------------------------------------------------
+
+def trend_band(df: pd.DataFrame, n: int, band: float) -> dict:
+    """Trend filter with a buffer: enter above SMA*(1+band), exit below SMA*(1-band).
+    Same edge as trend_sma; the band exists to cut whipsaw trades and fees."""
+    m = ind.sma(df["close"], n)
+    return {"entry": (df["close"] > m * (1 + band)).to_numpy(),
+            "exit": (df["close"] < m * (1 - band)).to_numpy()}
+
+
+def vol_target_trend(df: pd.DataFrame, n: int, target: float) -> dict:
+    """trend_sma sized by volatility targeting: weight = min(1, target / 30-day realized vol),
+    fixed at entry. Same edge, less exposure when the coin is wild."""
+    sig = trend_sma(df, n)
+    vol = ind.realized_vol(df["close"], 30, 365)
+    sig["weight"] = (target / vol).clip(upper=1.0).fillna(0.0).to_numpy()
+    return sig
+
+
+def btc_regime_trend(df: pd.DataFrame, n: int, btc_close: pd.Series, btc_n: int = 200) -> dict:
+    """Own trend AND Bitcoin above its 200-day average. Edge: alt coins rarely trend up
+    while BTC is in a downtrend (BTC sets the market's risk appetite)."""
+    btc_up = (btc_close > ind.sma(btc_close, btc_n)).reindex(df.index).fillna(False)
+    above = df["close"] > ind.sma(df["close"], n)
+    return {"entry": (above & btc_up).to_numpy(), "exit": (~above | ~btc_up).to_numpy()}
+
+
+btc_regime_trend.needs_btc = True
+
+
+def squeeze_breakout(df: pd.DataFrame, pct: float, lookback: int = 20, exit_n: int = 10) -> dict:
+    """Volatility compression then breakout: 20-day vol in its bottom `pct` of the last
+    365 days AND a close above the prior 20-day high. Edge: volatility clusters, and
+    quiet ranges tend to resolve in a sharp move that late buyers chase."""
+    vol = ind.realized_vol(df["close"], lookback, 365)
+    rank = vol.rolling(365, min_periods=365).apply(lambda x: (x <= x[-1]).mean(), raw=True)
+    quiet = rank.shift(1) <= pct  # quiet BEFORE the breakout bar
+    hi = ind.prior_high(df["high"], lookback)
+    lo = ind.prior_low(df["low"], exit_n)
+    return {"entry": (quiet & (df["close"] > hi)).to_numpy(), "exit": (df["close"] < lo).to_numpy()}
+
+
+CANDIDATES_R2 = {
+    "trend_band": (trend_band, "1d", _grid(n=[50, 100, 200], band=[0.02, 0.05, 0.10])),
+    "weekly_trend": (trend_sma, "1w", _grid(n=[10, 20, 30, 40])),
+    "vol_target_trend": (vol_target_trend, "1d", _grid(n=[50, 100, 150], target=[0.3, 0.5])),
+    "btc_regime_trend": (btc_regime_trend, "1d", _grid(n=[30, 50, 100])),
+    "squeeze_breakout": (squeeze_breakout, "1d", _grid(pct=[0.2, 0.3, 0.5])),
+}

@@ -19,7 +19,7 @@ import pandas as pd
 
 BASE = "https://data-api.binance.vision/api/v3/klines"
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-INTERVAL_MS = {"1h": 3_600_000, "4h": 14_400_000, "1d": 86_400_000}
+INTERVAL_MS = {"1h": 3_600_000, "4h": 14_400_000, "1d": 86_400_000, "1w": 604_800_000}
 
 
 def _get(url: str, retries: int = 4) -> list:
