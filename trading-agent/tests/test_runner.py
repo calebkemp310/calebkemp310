@@ -285,3 +285,20 @@ def test_replay_matches_backtest_trade_days(tmp_path, seed):
         assert t[p]["expected"], "replay should produce trades"
         assert t[p]["actual"] == t[p]["expected"], p
         assert t[p]["match"] is True
+
+
+def test_first_run_report_includes_this_runs_decisions(tmp_path):
+    """Regression: the report was written before the ledger, so run 1 showed an empty tracking table."""
+    m = mkt()
+    run(m, at(120), tmp_path)
+    tracking_section = (tmp_path / "report.md").read_text().split("## Tracking")[1]
+    assert "| BTC-USD |" in tracking_section and "| ETH-USD |" in tracking_section
+
+
+def test_alerts_are_kept_on_disk(tmp_path):
+    m = mkt()
+    run(m, at(120), tmp_path)
+    run(m, at(120, hour=2), tmp_path, kill_file=True)
+    text = (tmp_path / "alerts.md").read_text()
+    assert "Paper trading started" in text and "KILL" in text
+    assert text.count("## ") == 2  # one heading per run that had alerts

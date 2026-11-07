@@ -71,6 +71,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           [ -s outbox.md ] || exit 0
+          # Every alert is also kept in alerts.md on the paper-trading branch.
+          if [ "$(gh repo view "$GITHUB_REPOSITORY" --json hasIssuesEnabled --jq .hasIssuesEnabled)" != "true" ]; then
+            echo "::warning::Issues are disabled in this repo, so alerts were only saved to alerts.md on the paper-trading branch. Turn on Issues in Settings > General > Features to get phone alerts."
+            exit 0
+          fi
           num=$(gh issue list --state open --search 'in:title "Paper trading log"' --json number --jq '.[0].number')
           if [ -z "$num" ]; then
             url=$(gh issue create --title "Paper trading log" \

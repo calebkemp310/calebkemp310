@@ -96,11 +96,16 @@ def run_cycle(now: datetime, market, state_dir: Path, action: str = "run", kill_
         state["armed"] = False
         state["kill_reason"] = "manual kill (workflow button)"
 
-    def finish(ok: bool) -> dict:
+    def finish(ok: bool, prices: dict | None = None, data: dict | None = None) -> dict:
         if ok:
             state["last_success"] = ts
         st.save(state, sp)
-        st.append_ledger(lp, recs)
+        st.append_ledger(lp, recs)  # ledger first, so the report includes this run
+        if prices is not None:
+            write_report(state_dir, state, prices, data)
+        if alerts:  # permanent copy of every alert, whatever happens to the issue post
+            with (state_dir / "alerts.md").open("a") as f:
+                f.write(f"\n## {ts[:16].replace('T', ' ')} UTC\n" + "".join(f"- {m}\n" for m in alerts))
         return {"alerts": alerts, "records": recs, "state": state}
 
     # ---- data ------------------------------------------------------------------
@@ -181,9 +186,7 @@ def run_cycle(now: datetime, market, state_dir: Path, action: str = "run", kill_
             alerts.append(f"KILL: {state['kill_reason']}. "
                           f"Flattened {len(was_holding)} position(s). Re-arm needs Caleb (workflow 'rearm').")
         recs.append({"type": "kill", "ts": ts, "reasons": v.reasons, "flattened": was_holding})
-        state["last_success"] = ts
-        write_report(state_dir, state, prices, data)
-        return finish(True)
+        return finish(True, prices, data)
 
     # ---- freeze ----------------------------------------------------------------
     if v.mode == "freeze":
@@ -191,9 +194,7 @@ def run_cycle(now: datetime, market, state_dir: Path, action: str = "run", kill_
             alerts.append("FROZEN (no orders): " + "; ".join(v.reasons))
         state["frozen"] = True
         recs.append({"type": "freeze", "ts": ts, "reasons": v.reasons})
-        state["last_success"] = ts
-        write_report(state_dir, state, prices, data)
-        return finish(True)
+        return finish(True, prices, data)
     if state["frozen"]:
         alerts.append("Unfrozen: data checks pass again.")
         state["frozen"] = False
@@ -269,9 +270,7 @@ def run_cycle(now: datetime, market, state_dir: Path, action: str = "run", kill_
         alerts.append(f"Weekly summary: equity ${e2:,.2f} ({e2 / state['start_equity'] - 1:+.2%} since start), "
                       f"taker-shadow ${bk.shadow_equity(state, prices):,.2f}, positions: "
                       f"{', '.join(state['positions']) or 'none (cash)'}.")
-    state["last_success"] = ts
-    write_report(state_dir, state, prices, data)
-    return finish(True)
+    return finish(True, prices, data)
 
 
 def main(argv=None) -> int:
