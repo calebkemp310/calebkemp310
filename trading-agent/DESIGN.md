@@ -1,6 +1,6 @@
 # Paper Trading Design (Gates 2 + 3: Architecture and Test Plan)
 
-_Status: **design only, waiting for Caleb's approval to build (Gate 4).** No code in this repo can place an order, and the paper trader will never hold an API key._
+_Status: **built (Gate 4)**. Caleb approved the limits, GitHub alerts and the build on 2026-11-07. The paper trader starts hourly once this is on `main`. No code in this repo can place an order, and the paper trader will never hold an API key._
 _Strategy under test: `vol_target_trend` (SMA50, 30% vol target) on BTC-USD and ETH-USD. Why this one: SPEC.md section 11._
 
 ## 1. What the paper phase is for
@@ -217,6 +217,10 @@ The paper trader starts with a virtual $10,000 book (any size works, since resul
 
 ## 13. Decisions needed from Caleb
 
-1. **Approve the two limit changes** in section 6: daily loss -3% with block-only (was -2% with flatten), and drawdown kill -25% (was -10%). Without them, the backtest says the kill switch would have shut down a working strategy in 6 of 8 years.
-2. **Alerts via a GitHub issue + the GitHub app**, or something else (email, Telegram)?
-3. **Approve Gate 4:** build the paper trader as specified.
+All three approved by Caleb on 2026-11-07: the limit changes, GitHub issue alerts, and the Gate 4 build.
+
+**Build notes (differences from the plan above):**
+- The secondary cross-check tries Binance first, then Kraken. If neither answers, it's counted as a data error rather than a disagreement.
+- If the trend is still up after a catastrophe stop, the coin isn't re-entered until the signal goes flat once. The backtest has no stop, so tracking reports mark those days "n/a (stop/kill)".
+- The weekly summary is posted on Mondays.
+- The heartbeat routine for "no runs at all" is set up after merge, because GitHub only schedules workflows that are on `main`.
