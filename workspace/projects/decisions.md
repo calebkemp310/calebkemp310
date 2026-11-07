@@ -11,3 +11,4 @@ Format: `- YYYY-MM-DD: decision — reasoning`
 - 2026-11-07: Trading agent research uses Binance spot candles (data-api.binance.vision) as a proxy; live venue must be US (Kraken Pro / Coinbase Advanced). Binance doesn't serve US residents.
 - 2026-11-07: Seven pass/fail gates (held-out Sharpe, per-coin Sharpe, drawdown vs hold, grid robustness, 2x cost, trade count, deflated Sharpe) fixed in `research/run_research.py` before results; never edit them to rescue a strategy, and count every new trial.
 - 2026-11-07: Gate 1 rejected all 5 candidates; the main killer is US entry-tier fees (0.4-0.9% per side). No LLM in the order path, ever.
+- 2026-11-07: Round 2 candidates pre-registered in commit 6e0a950 before running; deflated Sharpe pools all trials across rounds. Fixed weekly-bar scoring bug (daily clock now forward-filled) after the first round-2 run, disclosed in SPEC section 11.

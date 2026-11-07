@@ -1,6 +1,6 @@
 # 24/7 Trading Agent: Gate 1 (Spec + Strategy Tournament)
 
-_Status: **waiting for Caleb's approval**. Nothing in this folder can place an order._
+_Status: Round 2 done (Caleb picked option 3, widen the search). **Waiting for Caleb's approval** of the next step in section 11. Nothing in this folder can place an order._
 _Data through 2026-11-06 (UTC daily close). Numbers come from `results/research.md`, produced by `python -m research.run_research`._
 
 ## 1. System overview
@@ -173,8 +173,43 @@ Pick one:
 2. **Fix costs first, then a new trial.** Register one new, separately counted candidate: `trend_sma` with volatility targeting on BTC and ETH only, filled with maker orders and costed at Kraken's 0.40% maker fee, judged against the same gates. If it passes, move on to Gate 2. If not, stop.
 3. **Widen the search.** Add new candidates. The obvious ones (carry, perps) are blocked for US accounts. Every new idea raises the bar the deflated Sharpe test sets.
 
+## 11. Round 2: widened search (2026-11-07)
+
+Caleb picked option 3. The option-2 idea (volatility-sized trend) went in as one of the new candidates.
+
+**Process.** Six new candidates and their parameter grids were committed in `6e0a950` before the first run. The split, costs and seven gates stayed the same as round 1. The deflated Sharpe pools all **184** trials from both rounds.
+
+**Measurement fix.** One bug was found and fixed after the first round-2 run. Weekly equity was being scored as if each weekly return were a daily one, which inflated the weekly strategy's Sharpe by about 2.6×. The fix carries the daily clock forward, and a new test guards it. Round 1's numbers didn't change. The weekly strategy fell from Sharpe 0.45 to 0.17.
+
+**Held-out results** (2024-01-01 to 2026-11-06, mean of BTC/ETH/SOL, 0.65% per side). Full detail is in `results/round2.md`.
+
+| Strategy | Edge | Timeframe | Sharpe | Worst max drawdown | Trades | Sharpe 0.10% → 1.30%/side | Verdict |
+|---|---|---|---|---|---|---|---|
+| Buy & hold | Beta | 1d | 0.41 | -76.3% | - | - | benchmark |
+| `vol_target_trend` n=50, 30% vol target | Trend + smaller size when volatile | 1d | **0.54** | **-41.9%** | 88 | 0.79 → 0.24 | **WATCH** (passes 6 of 7 gates; fails deflated Sharpe, best 0.057) |
+| `trend_band` n=50, 5% band | Trend with whipsaw buffer | 1d | 0.24 | -66.0% | 37 | 0.35 → 0.11 | WATCH (fails mean Sharpe and deflated Sharpe) |
+| `btc_regime_trend` n=100 | Alts only when BTC trends up | 1d | 0.28 | -72.5% | 65 | 0.48 → 0.04 | REJECT |
+| `squeeze_breakout` 50th percentile | Quiet range → breakout | 1d | 0.28 | -48.8% | 37 | 0.43 → 0.10 | REJECT |
+| `weekly_trend` 10 weeks | Slow trend, few trades | 1w | 0.17 | -75.9% | 44 | 0.31 → 0.01 | REJECT |
+| `dual_momentum` 30d (portfolio) | Rotate into the strongest coin | 1d | -0.45 | -75.3% | 123 | 0.42 → -1.44 | REJECT (equal-weight hold: 0.38 / -62.3%) |
+
+**What it means.**
+- `vol_target_trend` is the first candidate to clear every gate except the luck test. On every coin it has a positive Sharpe, roughly halves the worst drawdown, and survives double costs.
+- It still can't rule out luck: after 184 trials, the deflated Sharpe gives at most a 6% probability that its edge is real.
+- The honest label is a **risk overlay** (it cuts losses in bad years), not proven alpha.
+
+**Exploratory checks (not pre-registered, not used for any verdict):**
+- **Year by year,** its drawdown was smaller than buy-and-hold's in every year except ETH 2023, where they were about even. In 2022 it lost -33% vs -65% on BTC and -16% vs -68% on ETH. In bull years it lags badly: SOL 2021 made +641% vs +9,128% holding, and BTC 2024 made +41% vs +112%.
+- **BTC + ETH 50/50 on held-out:** Sharpe 0.74, max drawdown -22.7%, CAGR 15.5%. Sharpe was 0.85 at Kraken's 0.40% maker fee and 0.58 at 0.90% taker. This combination was picked after seeing the data, so it counts as a new trial and isn't evidence.
+
+**Proposed next gate (needs approval).** More backtest variations can't beat the luck test, because each one raises the bar. The only clean new evidence is forward data the strategy has never seen. Proposal:
+1. Gate 2 (architecture): design the paper-trading loop and `RiskGate` for `vol_target_trend` on BTC-USD and ETH-USD, using the risk spec in section 7.
+2. Paper trade for 90 days or more. Expect only about 5 to 6 trades in that time, so the paper period is judged on **tracking**, not profit: do live signals, simulated fills and costs match the backtest's? The P&L verdict comes from the backtest gates plus any forward record.
+3. No real money until Caleb signs off on that record, and then only $100 or less.
+
 ## HOW COULD THIS SYSTEM FAIL?
 
+0. **Round 2 update:** the best candidate is now a risk overlay that fails the luck test. Its value is in losing less, not making more. If you deploy it expecting it to beat holding in a bull market, you will be disappointed and tempted to override it.
 1. **The edge was never there.** This is already the main finding. The simple long-only rules that looked great from 2019 to 2023 didn't hold up from 2024 to 2026 after costs. Rerunning until something passes is exactly how overfitting happens, so every new trial is counted.
 2. **Fees decide the outcome.** At US entry-tier taker fees (0.80% to 0.90%), every candidate is flat or negative. Fee schedules change without notice, and Coinbase doesn't publish its schedule openly.
 3. **Research data ≠ trading venue.** The backtests use Binance USDT pairs; live trading would be on Coinbase/Kraken USD pairs. Small differences in bar times, prices and wicks change trend signals near the average.

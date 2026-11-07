@@ -1,0 +1,1546 @@
+{
+ "generated": "2026-11-07T05:38:08+00:00",
+ "train": [
+  "2019-01-01",
+  "2023-12-31"
+ ],
+ "test": [
+  "2024-01-01",
+  "2026-11-06"
+ ],
+ "costs_per_side": 0.006500000000000001,
+ "gates": {
+  "test_sharpe_mean_min": 0.5,
+  "test_sharpe_each_min": 0.0,
+  "test_dd_beats_hold": true,
+  "grid_positive_frac_min": 0.7,
+  "double_cost_sharpe_min": 0.0,
+  "test_trades_min": 30,
+  "dsr_min": 0.9
+ },
+ "benchmark": {
+  "BTCUSDT": {
+   "test": {
+    "sharpe": 0.63,
+    "cagr": 0.2062,
+    "max_dd": -0.5297,
+    "trades": 0,
+    "win_rate": null,
+    "profit_factor": null,
+    "exposure": 0.999,
+    "total_return": 0.7056
+   }
+  },
+  "ETHUSDT": {
+   "test": {
+    "sharpe": 0.3,
+    "cagr": -0.0194,
+    "max_dd": -0.6755,
+    "trades": 0,
+    "win_rate": null,
+    "profit_factor": null,
+    "exposure": 0.999,
+    "total_return": -0.0544
+   }
+  },
+  "SOLUSDT": {
+   "test": {
+    "sharpe": 0.3,
+    "cagr": -0.0695,
+    "max_dd": -0.7626,
+    "trades": 0,
+    "win_rate": null,
+    "profit_factor": null,
+    "exposure": 0.999,
+    "total_return": -0.1854
+   }
+  }
+ },
+ "candidates": {
+  "trend_band": {
+   "timeframe": "1d",
+   "grid": [
+    {
+     "params": {
+      "n": 50,
+      "band": 0.02
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.36,
+       "cagr": 0.7161,
+       "max_dd": -0.5706,
+       "trades": 22,
+       "win_rate": 0.455,
+       "profit_factor": 5.41,
+       "exposure": 0.537,
+       "total_return": 13.8559
+      },
+      "ETHUSDT": {
+       "sharpe": 1.25,
+       "cagr": 0.8009,
+       "max_dd": -0.5436,
+       "trades": 24,
+       "win_rate": 0.417,
+       "profit_factor": 4.84,
+       "exposure": 0.568,
+       "total_return": 17.9075
+      },
+      "SOLUSDT": {
+       "sharpe": 1.9,
+       "cagr": 2.971,
+       "max_dd": -0.7518,
+       "trades": 20,
+       "win_rate": 0.2,
+       "profit_factor": 12.08,
+       "exposure": 0.464,
+       "total_return": 105.7307
+      }
+     },
+     "train_sharpe_mean": 1.5033333333333332
+    },
+    {
+     "params": {
+      "n": 50,
+      "band": 0.05
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.28,
+       "cagr": 0.6461,
+       "max_dd": -0.6095,
+       "trades": 17,
+       "win_rate": 0.471,
+       "profit_factor": 5.22,
+       "exposure": 0.551,
+       "total_return": 11.0672
+      },
+      "ETHUSDT": {
+       "sharpe": 1.09,
+       "cagr": 0.6326,
+       "max_dd": -0.5741,
+       "trades": 17,
+       "win_rate": 0.529,
+       "profit_factor": 4.7,
+       "exposure": 0.57,
+       "total_return": 10.5807
+      },
+      "SOLUSDT": {
+       "sharpe": 2.02,
+       "cagr": 3.476,
+       "max_dd": -0.6414,
+       "trades": 12,
+       "win_rate": 0.333,
+       "profit_factor": 15.87,
+       "exposure": 0.47,
+       "total_return": 159.0954
+      }
+     },
+     "train_sharpe_mean": 1.4633333333333336
+    },
+    {
+     "params": {
+      "n": 50,
+      "band": 0.1
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.29,
+       "cagr": 0.6748,
+       "max_dd": -0.5021,
+       "trades": 9,
+       "win_rate": 0.444,
+       "profit_factor": 15.58,
+       "exposure": 0.611,
+       "total_return": 12.1548
+      },
+      "ETHUSDT": {
+       "sharpe": 1.06,
+       "cagr": 0.5911,
+       "max_dd": -0.6674,
+       "trades": 12,
+       "win_rate": 0.583,
+       "profit_factor": 7.24,
+       "exposure": 0.535,
+       "total_return": 9.1805
+      },
+      "SOLUSDT": {
+       "sharpe": 1.86,
+       "cagr": 2.803,
+       "max_dd": -0.7163,
+       "trades": 9,
+       "win_rate": 0.333,
+       "profit_factor": 13.32,
+       "exposure": 0.476,
+       "total_return": 91.195
+      }
+     },
+     "train_sharpe_mean": 1.4033333333333333
+    },
+    {
+     "params": {
+      "n": 100,
+      "band": 0.02
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.34,
+       "cagr": 0.7034,
+       "max_dd": -0.4448,
+       "trades": 10,
+       "win_rate": 0.4,
+       "profit_factor": 12.33,
+       "exposure": 0.558,
+       "total_return": 13.3147
+      },
+      "ETHUSDT": {
+       "sharpe": 0.94,
+       "cagr": 0.4905,
+       "max_dd": -0.6885,
+       "trades": 15,
+       "win_rate": 0.267,
+       "profit_factor": 7.97,
+       "exposure": 0.586,
+       "total_return": 6.3456
+      },
+      "SOLUSDT": {
+       "sharpe": 1.46,
+       "cagr": 1.5786,
+       "max_dd": -0.8822,
+       "trades": 19,
+       "win_rate": 0.105,
+       "profit_factor": 6.89,
+       "exposure": 0.456,
+       "total_return": 23.7304
+      }
+     },
+     "train_sharpe_mean": 1.2466666666666668
+    },
+    {
+     "params": {
+      "n": 100,
+      "band": 0.05
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.33,
+       "cagr": 0.6939,
+       "max_dd": -0.3861,
+       "trades": 7,
+       "win_rate": 0.571,
+       "profit_factor": 14.99,
+       "exposure": 0.556,
+       "total_return": 12.9188
+      },
+      "ETHUSDT": {
+       "sharpe": 0.79,
+       "cagr": 0.3449,
+       "max_dd": -0.7651,
+       "trades": 11,
+       "win_rate": 0.364,
+       "profit_factor": 7.0,
+       "exposure": 0.582,
+       "total_return": 3.3956
+      },
+      "SOLUSDT": {
+       "sharpe": 1.74,
+       "cagr": 2.4063,
+       "max_dd": -0.8396,
+       "trades": 9,
+       "win_rate": 0.333,
+       "profit_factor": 12.78,
+       "exposure": 0.464,
+       "total_return": 62.4897
+      }
+     },
+     "train_sharpe_mean": 1.2866666666666668
+    },
+    {
+     "params": {
+      "n": 100,
+      "band": 0.1
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.94,
+       "cagr": 0.4184,
+       "max_dd": -0.6642,
+       "trades": 6,
+       "win_rate": 0.667,
+       "profit_factor": 7.42,
+       "exposure": 0.591,
+       "total_return": 4.7339
+      },
+      "ETHUSDT": {
+       "sharpe": 0.86,
+       "cagr": 0.4085,
+       "max_dd": -0.6955,
+       "trades": 7,
+       "win_rate": 0.571,
+       "profit_factor": 9.74,
+       "exposure": 0.59,
+       "total_return": 4.5368
+      },
+      "SOLUSDT": {
+       "sharpe": 1.67,
+       "cagr": 2.1831,
+       "max_dd": -0.8652,
+       "trades": 6,
+       "win_rate": 0.333,
+       "profit_factor": 12.16,
+       "exposure": 0.495,
+       "total_return": 49.469
+      }
+     },
+     "train_sharpe_mean": 1.1566666666666665
+    },
+    {
+     "params": {
+      "n": 200,
+      "band": 0.02
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.82,
+       "cagr": 0.3001,
+       "max_dd": -0.5293,
+       "trades": 9,
+       "win_rate": 0.222,
+       "profit_factor": 4.88,
+       "exposure": 0.504,
+       "total_return": 2.7109
+      },
+      "ETHUSDT": {
+       "sharpe": 0.97,
+       "cagr": 0.5071,
+       "max_dd": -0.6615,
+       "trades": 8,
+       "win_rate": 0.375,
+       "profit_factor": 11.95,
+       "exposure": 0.53,
+       "total_return": 6.7649
+      },
+      "SOLUSDT": {
+       "sharpe": 1.57,
+       "cagr": 1.6441,
+       "max_dd": -0.7019,
+       "trades": 5,
+       "win_rate": 0.2,
+       "profit_factor": 21.86,
+       "exposure": 0.423,
+       "total_return": 25.9247
+      }
+     },
+     "train_sharpe_mean": 1.12
+    },
+    {
+     "params": {
+      "n": 200,
+      "band": 0.05
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.75,
+       "cagr": 0.262,
+       "max_dd": -0.5667,
+       "trades": 7,
+       "win_rate": 0.286,
+       "profit_factor": 4.57,
+       "exposure": 0.52,
+       "total_return": 2.1982
+      },
+      "ETHUSDT": {
+       "sharpe": 0.91,
+       "cagr": 0.454,
+       "max_dd": -0.6968,
+       "trades": 6,
+       "win_rate": 0.5,
+       "profit_factor": 11.21,
+       "exposure": 0.528,
+       "total_return": 5.4906
+      },
+      "SOLUSDT": {
+       "sharpe": 1.56,
+       "cagr": 1.6328,
+       "max_dd": -0.7063,
+       "trades": 3,
+       "win_rate": 0.333,
+       "profit_factor": 23.81,
+       "exposure": 0.431,
+       "total_return": 25.5348
+      }
+     },
+     "train_sharpe_mean": 1.0733333333333335
+    },
+    {
+     "params": {
+      "n": 200,
+      "band": 0.1
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.44,
+       "cagr": 0.0956,
+       "max_dd": -0.7095,
+       "trades": 5,
+       "win_rate": 0.2,
+       "profit_factor": 2.4,
+       "exposure": 0.533,
+       "total_return": 0.578
+      },
+      "ETHUSDT": {
+       "sharpe": 0.85,
+       "cagr": 0.3931,
+       "max_dd": -0.6436,
+       "trades": 5,
+       "win_rate": 0.6,
+       "profit_factor": 12.13,
+       "exposure": 0.538,
+       "total_return": 4.2406
+      },
+      "SOLUSDT": {
+       "sharpe": 1.41,
+       "cagr": 1.3172,
+       "max_dd": -0.8094,
+       "trades": 3,
+       "win_rate": 0.333,
+       "profit_factor": 12.19,
+       "exposure": 0.434,
+       "total_return": 16.2201
+      }
+     },
+     "train_sharpe_mean": 0.9
+    }
+   ],
+   "smoothed_train_sharpe": [
+    1.404,
+    1.414,
+    1.341,
+    1.289,
+    1.245,
+    1.187,
+    1.147,
+    1.095,
+    1.043
+   ],
+   "chosen": {
+    "n": 50,
+    "band": 0.05
+   },
+   "grid_positive_frac": 1.0,
+   "test": {
+    "BTCUSDT": {
+     "sharpe": 0.3,
+     "cagr": 0.0468,
+     "max_dd": -0.3956,
+     "trades": 11,
+     "win_rate": 0.364,
+     "profit_factor": 1.43,
+     "exposure": 0.603,
+     "total_return": 0.1391
+    },
+    "ETHUSDT": {
+     "sharpe": 0.38,
+     "cagr": 0.0731,
+     "max_dd": -0.5008,
+     "trades": 12,
+     "win_rate": 0.417,
+     "profit_factor": 1.52,
+     "exposure": 0.494,
+     "total_return": 0.2225
+    },
+    "SOLUSDT": {
+     "sharpe": 0.05,
+     "cagr": -0.1074,
+     "max_dd": -0.6599,
+     "trades": 14,
+     "win_rate": 0.357,
+     "profit_factor": 0.98,
+     "exposure": 0.518,
+     "total_return": -0.2765
+    }
+   },
+   "cost_ladder_test_sharpe": {
+    "BTCUSDT": {
+     "0.001": 0.43,
+     "0.0025": 0.4,
+     "0.0065": 0.3,
+     "0.013": 0.15
+    },
+    "ETHUSDT": {
+     "0.001": 0.48,
+     "0.0025": 0.45,
+     "0.0065": 0.38,
+     "0.013": 0.25
+    },
+    "SOLUSDT": {
+     "0.001": 0.15,
+     "0.0025": 0.12,
+     "0.0065": 0.05,
+     "0.013": -0.07
+    }
+   },
+   "dsr": {
+    "BTCUSDT": 0.005,
+    "ETHUSDT": 0.002,
+    "SOLUSDT": 0.072
+   },
+   "checks": {
+    "test_sharpe_mean": false,
+    "test_sharpe_each": true,
+    "test_dd_beats_hold": true,
+    "grid_robust": true,
+    "double_cost": true,
+    "enough_trades": true,
+    "dsr": false
+   },
+   "verdict": "WATCH"
+  },
+  "weekly_trend": {
+   "timeframe": "1w",
+   "grid": [
+    {
+     "params": {
+      "n": 10
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.11,
+       "cagr": 0.5483,
+       "max_dd": -0.5811,
+       "trades": 19,
+       "win_rate": 0.421,
+       "profit_factor": 5.01,
+       "exposure": 0.542,
+       "total_return": 7.759
+      },
+      "ETHUSDT": {
+       "sharpe": 0.9,
+       "cagr": 0.4726,
+       "max_dd": -0.7009,
+       "trades": 17,
+       "win_rate": 0.353,
+       "profit_factor": 4.01,
+       "exposure": 0.585,
+       "total_return": 5.8277
+      },
+      "SOLUSDT": {
+       "sharpe": 1.44,
+       "cagr": 1.7628,
+       "max_dd": -0.9001,
+       "trades": 11,
+       "win_rate": 0.273,
+       "profit_factor": 8.6,
+       "exposure": 0.458,
+       "total_return": 29.81
+      }
+     },
+     "train_sharpe_mean": 1.1500000000000001
+    },
+    {
+     "params": {
+      "n": 20
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.9,
+       "cagr": 0.3889,
+       "max_dd": -0.4867,
+       "trades": 9,
+       "win_rate": 0.333,
+       "profit_factor": 8.16,
+       "exposure": 0.535,
+       "total_return": 4.1072
+      },
+      "ETHUSDT": {
+       "sharpe": 0.89,
+       "cagr": 0.4474,
+       "max_dd": -0.6241,
+       "trades": 11,
+       "win_rate": 0.273,
+       "profit_factor": 9.5,
+       "exposure": 0.546,
+       "total_return": 5.2685
+      },
+      "SOLUSDT": {
+       "sharpe": 1.73,
+       "cagr": 2.7521,
+       "max_dd": -0.6638,
+       "trades": 5,
+       "win_rate": 0.4,
+       "profit_factor": 25.32,
+       "exposure": 0.492,
+       "total_return": 85.5097
+      }
+     },
+     "train_sharpe_mean": 1.1733333333333333
+    },
+    {
+     "params": {
+      "n": 30
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.72,
+       "cagr": 0.2553,
+       "max_dd": -0.5599,
+       "trades": 10,
+       "win_rate": 0.2,
+       "profit_factor": 4.37,
+       "exposure": 0.492,
+       "total_return": 2.0913
+      },
+      "ETHUSDT": {
+       "sharpe": 0.96,
+       "cagr": 0.5056,
+       "max_dd": -0.5742,
+       "trades": 7,
+       "win_rate": 0.429,
+       "profit_factor": 11.85,
+       "exposure": 0.538,
+       "total_return": 6.6216
+      },
+      "SOLUSDT": {
+       "sharpe": 1.3,
+       "cagr": 1.2897,
+       "max_dd": -0.8036,
+       "trades": 4,
+       "win_rate": 0.25,
+       "profit_factor": 11.43,
+       "exposure": 0.412,
+       "total_return": 15.3506
+      }
+     },
+     "train_sharpe_mean": 0.9933333333333333
+    },
+    {
+     "params": {
+      "n": 40
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.9,
+       "cagr": 0.3752,
+       "max_dd": -0.4967,
+       "trades": 7,
+       "win_rate": 0.286,
+       "profit_factor": 6.93,
+       "exposure": 0.538,
+       "total_return": 3.8622
+      },
+      "ETHUSDT": {
+       "sharpe": 0.97,
+       "cagr": 0.5141,
+       "max_dd": -0.5518,
+       "trades": 6,
+       "win_rate": 0.333,
+       "profit_factor": 19.68,
+       "exposure": 0.535,
+       "total_return": 6.839
+      },
+      "SOLUSDT": {
+       "sharpe": 1.03,
+       "cagr": 0.738,
+       "max_dd": -0.7373,
+       "trades": 3,
+       "win_rate": 0.333,
+       "profit_factor": 3.76,
+       "exposure": 0.328,
+       "total_return": 5.4517
+      }
+     },
+     "train_sharpe_mean": 0.9666666666666668
+    }
+   ],
+   "smoothed_train_sharpe": [
+    1.162,
+    1.106,
+    1.044,
+    0.98
+   ],
+   "chosen": {
+    "n": 10
+   },
+   "grid_positive_frac": 1.0,
+   "test": {
+    "BTCUSDT": {
+     "sharpe": 0.33,
+     "cagr": 0.0568,
+     "max_dd": -0.397,
+     "trades": 15,
+     "win_rate": 0.4,
+     "profit_factor": 1.51,
+     "exposure": 0.534,
+     "total_return": 0.1684
+    },
+    "ETHUSDT": {
+     "sharpe": 0.25,
+     "cagr": 0.0144,
+     "max_dd": -0.5964,
+     "trades": 13,
+     "win_rate": 0.385,
+     "profit_factor": 1.36,
+     "exposure": 0.48,
+     "total_return": 0.0412
+    },
+    "SOLUSDT": {
+     "sharpe": -0.06,
+     "cagr": -0.1745,
+     "max_dd": -0.7594,
+     "trades": 16,
+     "win_rate": 0.312,
+     "profit_factor": 0.83,
+     "exposure": 0.48,
+     "total_return": -0.4174
+    }
+   },
+   "cost_ladder_test_sharpe": {
+    "BTCUSDT": {
+     "0.001": 0.51,
+     "0.0025": 0.46,
+     "0.0065": 0.33,
+     "0.013": 0.11
+    },
+    "ETHUSDT": {
+     "0.001": 0.36,
+     "0.0025": 0.33,
+     "0.0065": 0.25,
+     "0.013": 0.11
+    },
+    "SOLUSDT": {
+     "0.001": 0.05,
+     "0.0025": 0.02,
+     "0.0065": -0.06,
+     "0.013": -0.19
+    }
+   },
+   "dsr": {
+    "BTCUSDT": 0.001,
+    "ETHUSDT": 0.0,
+    "SOLUSDT": 0.003
+   },
+   "checks": {
+    "test_sharpe_mean": false,
+    "test_sharpe_each": false,
+    "test_dd_beats_hold": true,
+    "grid_robust": true,
+    "double_cost": true,
+    "enough_trades": true,
+    "dsr": false
+   },
+   "verdict": "REJECT"
+  },
+  "vol_target_trend": {
+   "timeframe": "1d",
+   "grid": [
+    {
+     "params": {
+      "n": 50,
+      "target": 0.3
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.61,
+       "cagr": 0.7298,
+       "max_dd": -0.3957,
+       "trades": 39,
+       "win_rate": 0.256,
+       "profit_factor": 7.35,
+       "exposure": 0.537,
+       "total_return": 14.4588
+      },
+      "ETHUSDT": {
+       "sharpe": 0.99,
+       "cagr": 0.3326,
+       "max_dd": -0.3688,
+       "trades": 50,
+       "win_rate": 0.24,
+       "profit_factor": 2.98,
+       "exposure": 0.563,
+       "total_return": 3.198
+      },
+      "SOLUSDT": {
+       "sharpe": 1.94,
+       "cagr": 1.406,
+       "max_dd": -0.3788,
+       "trades": 31,
+       "win_rate": 0.161,
+       "profit_factor": 7.42,
+       "exposure": 0.468,
+       "total_return": 18.5579
+      }
+     },
+     "train_sharpe_mean": 1.5133333333333334
+    },
+    {
+     "params": {
+      "n": 50,
+      "target": 0.5
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.5,
+       "cagr": 0.7661,
+       "max_dd": -0.5359,
+       "trades": 39,
+       "win_rate": 0.256,
+       "profit_factor": 5.74,
+       "exposure": 0.537,
+       "total_return": 16.1468
+      },
+      "ETHUSDT": {
+       "sharpe": 1.03,
+       "cagr": 0.4744,
+       "max_dd": -0.472,
+       "trades": 50,
+       "win_rate": 0.24,
+       "profit_factor": 3.21,
+       "exposure": 0.563,
+       "total_return": 5.958
+      },
+      "SOLUSDT": {
+       "sharpe": 2.02,
+       "cagr": 2.0846,
+       "max_dd": -0.4666,
+       "trades": 31,
+       "win_rate": 0.161,
+       "profit_factor": 7.43,
+       "exposure": 0.468,
+       "total_return": 44.3705
+      }
+     },
+     "train_sharpe_mean": 1.5166666666666668
+    },
+    {
+     "params": {
+      "n": 100,
+      "target": 0.3
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.29,
+       "cagr": 0.4874,
+       "max_dd": -0.3378,
+       "trades": 27,
+       "win_rate": 0.259,
+       "profit_factor": 7.04,
+       "exposure": 0.548,
+       "total_return": 6.2709
+      },
+      "ETHUSDT": {
+       "sharpe": 0.79,
+       "cagr": 0.2594,
+       "max_dd": -0.582,
+       "trades": 36,
+       "win_rate": 0.167,
+       "profit_factor": 3.7,
+       "exposure": 0.577,
+       "total_return": 2.1656
+      },
+      "SOLUSDT": {
+       "sharpe": 1.31,
+       "cagr": 0.6867,
+       "max_dd": -0.5801,
+       "trades": 25,
+       "win_rate": 0.12,
+       "profit_factor": 3.48,
+       "exposure": 0.448,
+       "total_return": 4.8736
+      }
+     },
+     "train_sharpe_mean": 1.1300000000000001
+    },
+    {
+     "params": {
+      "n": 100,
+      "target": 0.5
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.21,
+       "cagr": 0.5451,
+       "max_dd": -0.3999,
+       "trades": 27,
+       "win_rate": 0.259,
+       "profit_factor": 5.84,
+       "exposure": 0.548,
+       "total_return": 7.7942
+      },
+      "ETHUSDT": {
+       "sharpe": 0.81,
+       "cagr": 0.3325,
+       "max_dd": -0.6805,
+       "trades": 36,
+       "win_rate": 0.167,
+       "profit_factor": 3.8,
+       "exposure": 0.577,
+       "total_return": 3.1973
+      },
+      "SOLUSDT": {
+       "sharpe": 1.37,
+       "cagr": 0.936,
+       "max_dd": -0.7412,
+       "trades": 25,
+       "win_rate": 0.12,
+       "profit_factor": 3.48,
+       "exposure": 0.448,
+       "total_return": 8.3678
+      }
+     },
+     "train_sharpe_mean": 1.1300000000000001
+    },
+    {
+     "params": {
+      "n": 150,
+      "target": 0.3
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.05,
+       "cagr": 0.3209,
+       "max_dd": -0.3383,
+       "trades": 17,
+       "win_rate": 0.235,
+       "profit_factor": 6.12,
+       "exposure": 0.531,
+       "total_return": 3.0176
+      },
+      "ETHUSDT": {
+       "sharpe": 0.84,
+       "cagr": 0.291,
+       "max_dd": -0.5077,
+       "trades": 21,
+       "win_rate": 0.238,
+       "profit_factor": 6.14,
+       "exposure": 0.545,
+       "total_return": 2.5826
+      },
+      "SOLUSDT": {
+       "sharpe": 1.54,
+       "cagr": 0.968,
+       "max_dd": -0.5053,
+       "trades": 14,
+       "win_rate": 0.143,
+       "profit_factor": 6.49,
+       "exposure": 0.48,
+       "total_return": 8.9031
+      }
+     },
+     "train_sharpe_mean": 1.1433333333333333
+    },
+    {
+     "params": {
+      "n": 150,
+      "target": 0.5
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.02,
+       "cagr": 0.3786,
+       "max_dd": -0.42,
+       "trades": 17,
+       "win_rate": 0.235,
+       "profit_factor": 6.34,
+       "exposure": 0.531,
+       "total_return": 3.9742
+      },
+      "ETHUSDT": {
+       "sharpe": 0.84,
+       "cagr": 0.3457,
+       "max_dd": -0.5759,
+       "trades": 21,
+       "win_rate": 0.238,
+       "profit_factor": 6.19,
+       "exposure": 0.545,
+       "total_return": 3.4078
+      },
+      "SOLUSDT": {
+       "sharpe": 1.66,
+       "cagr": 1.4432,
+       "max_dd": -0.6341,
+       "trades": 14,
+       "win_rate": 0.143,
+       "profit_factor": 6.5,
+       "exposure": 0.48,
+       "total_return": 19.6014
+      }
+     },
+     "train_sharpe_mean": 1.1733333333333331
+    }
+   ],
+   "smoothed_train_sharpe": [
+    1.387,
+    1.387,
+    1.229,
+    1.238,
+    1.149,
+    1.149
+   ],
+   "chosen": {
+    "n": 50,
+    "target": 0.3
+   },
+   "grid_positive_frac": 1.0,
+   "test": {
+    "BTCUSDT": {
+     "sharpe": 0.6,
+     "cagr": 0.1266,
+     "max_dd": -0.2994,
+     "trades": 34,
+     "win_rate": 0.176,
+     "profit_factor": 1.76,
+     "exposure": 0.562,
+     "total_return": 0.4041
+    },
+    "ETHUSDT": {
+     "sharpe": 0.8,
+     "cagr": 0.1823,
+     "max_dd": -0.2548,
+     "trades": 22,
+     "win_rate": 0.273,
+     "profit_factor": 2.48,
+     "exposure": 0.486,
+     "total_return": 0.6111
+    },
+    "SOLUSDT": {
+     "sharpe": 0.22,
+     "cagr": 0.0242,
+     "max_dd": -0.4185,
+     "trades": 32,
+     "win_rate": 0.188,
+     "profit_factor": 1.24,
+     "exposure": 0.508,
+     "total_return": 0.0704
+    }
+   },
+   "cost_ladder_test_sharpe": {
+    "BTCUSDT": {
+     "0.001": 0.97,
+     "0.0025": 0.87,
+     "0.0065": 0.6,
+     "0.013": 0.15
+    },
+    "ETHUSDT": {
+     "0.001": 0.97,
+     "0.0025": 0.93,
+     "0.0065": 0.8,
+     "0.013": 0.59
+    },
+    "SOLUSDT": {
+     "0.001": 0.44,
+     "0.0025": 0.38,
+     "0.0065": 0.22,
+     "0.013": -0.03
+    }
+   },
+   "dsr": {
+    "BTCUSDT": 0.04,
+    "ETHUSDT": 0.003,
+    "SOLUSDT": 0.057
+   },
+   "checks": {
+    "test_sharpe_mean": true,
+    "test_sharpe_each": true,
+    "test_dd_beats_hold": true,
+    "grid_robust": true,
+    "double_cost": true,
+    "enough_trades": true,
+    "dsr": false
+   },
+   "verdict": "WATCH"
+  },
+  "btc_regime_trend": {
+   "timeframe": "1d",
+   "grid": [
+    {
+     "params": {
+      "n": 30
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.54,
+       "cagr": 0.1376,
+       "max_dd": -0.5524,
+       "trades": 51,
+       "win_rate": 0.235,
+       "profit_factor": 1.7,
+       "exposure": 0.332,
+       "total_return": 0.9044
+      },
+      "ETHUSDT": {
+       "sharpe": 0.8,
+       "cagr": 0.3192,
+       "max_dd": -0.7202,
+       "trades": 42,
+       "win_rate": 0.238,
+       "profit_factor": 2.23,
+       "exposure": 0.347,
+       "total_return": 2.9916
+      },
+      "SOLUSDT": {
+       "sharpe": 1.84,
+       "cagr": 2.4893,
+       "max_dd": -0.6536,
+       "trades": 37,
+       "win_rate": 0.243,
+       "profit_factor": 5.6,
+       "exposure": 0.347,
+       "total_return": 67.8836
+      }
+     },
+     "train_sharpe_mean": 1.06
+    },
+    {
+     "params": {
+      "n": 50
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 1.02,
+       "cagr": 0.3674,
+       "max_dd": -0.4862,
+       "trades": 27,
+       "win_rate": 0.259,
+       "profit_factor": 4.9,
+       "exposure": 0.363,
+       "total_return": 3.7761
+      },
+      "ETHUSDT": {
+       "sharpe": 0.71,
+       "cagr": 0.2642,
+       "max_dd": -0.6732,
+       "trades": 39,
+       "win_rate": 0.231,
+       "profit_factor": 2.62,
+       "exposure": 0.382,
+       "total_return": 2.227
+      },
+      "SOLUSDT": {
+       "sharpe": 1.98,
+       "cagr": 2.9174,
+       "max_dd": -0.4689,
+       "trades": 23,
+       "win_rate": 0.304,
+       "profit_factor": 13.2,
+       "exposure": 0.359,
+       "total_return": 100.9323
+      }
+     },
+     "train_sharpe_mean": 1.2366666666666666
+    },
+    {
+     "params": {
+      "n": 100
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.8,
+       "cagr": 0.2766,
+       "max_dd": -0.5091,
+       "trades": 25,
+       "win_rate": 0.16,
+       "profit_factor": 3.66,
+       "exposure": 0.453,
+       "total_return": 2.3875
+      },
+      "ETHUSDT": {
+       "sharpe": 0.97,
+       "cagr": 0.4588,
+       "max_dd": -0.6868,
+       "trades": 26,
+       "win_rate": 0.192,
+       "profit_factor": 5.69,
+       "exposure": 0.433,
+       "total_return": 5.5984
+      },
+      "SOLUSDT": {
+       "sharpe": 1.9,
+       "cagr": 2.5185,
+       "max_dd": -0.6769,
+       "trades": 19,
+       "win_rate": 0.316,
+       "profit_factor": 13.44,
+       "exposure": 0.372,
+       "total_return": 69.8524
+      }
+     },
+     "train_sharpe_mean": 1.2233333333333334
+    }
+   ],
+   "smoothed_train_sharpe": [
+    1.148,
+    1.173,
+    1.23
+   ],
+   "chosen": {
+    "n": 100
+   },
+   "grid_positive_frac": 1.0,
+   "test": {
+    "BTCUSDT": {
+     "sharpe": 0.5,
+     "cagr": 0.1154,
+     "max_dd": -0.4226,
+     "trades": 20,
+     "win_rate": 0.2,
+     "profit_factor": 1.84,
+     "exposure": 0.515,
+     "total_return": 0.3649
+    },
+    "ETHUSDT": {
+     "sharpe": 0.36,
+     "cagr": 0.064,
+     "max_dd": -0.5237,
+     "trades": 18,
+     "win_rate": 0.167,
+     "profit_factor": 1.59,
+     "exposure": 0.461,
+     "total_return": 0.1933
+    },
+    "SOLUSDT": {
+     "sharpe": -0.01,
+     "cagr": -0.138,
+     "max_dd": -0.7254,
+     "trades": 27,
+     "win_rate": 0.222,
+     "profit_factor": 0.64,
+     "exposure": 0.471,
+     "total_return": -0.3449
+    }
+   },
+   "cost_ladder_test_sharpe": {
+    "BTCUSDT": {
+     "0.001": 0.74,
+     "0.0025": 0.67,
+     "0.0065": 0.5,
+     "0.013": 0.21
+    },
+    "ETHUSDT": {
+     "0.001": 0.52,
+     "0.0025": 0.48,
+     "0.0065": 0.36,
+     "0.013": 0.16
+    },
+    "SOLUSDT": {
+     "0.001": 0.18,
+     "0.0025": 0.13,
+     "0.0065": -0.02,
+     "0.013": -0.25
+    }
+   },
+   "dsr": {
+    "BTCUSDT": 0.0,
+    "ETHUSDT": 0.001,
+    "SOLUSDT": 0.035
+   },
+   "checks": {
+    "test_sharpe_mean": false,
+    "test_sharpe_each": false,
+    "test_dd_beats_hold": true,
+    "grid_robust": true,
+    "double_cost": true,
+    "enough_trades": true,
+    "dsr": false
+   },
+   "verdict": "REJECT"
+  },
+  "squeeze_breakout": {
+   "timeframe": "1d",
+   "grid": [
+    {
+     "params": {
+      "pct": 0.2
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.96,
+       "cagr": 0.2696,
+       "max_dd": -0.5302,
+       "trades": 9,
+       "win_rate": 0.333,
+       "profit_factor": 6.01,
+       "exposure": 0.164,
+       "total_return": 2.2958
+      },
+      "ETHUSDT": {
+       "sharpe": 1.0,
+       "cagr": 0.4162,
+       "max_dd": -0.5242,
+       "trades": 13,
+       "win_rate": 0.462,
+       "profit_factor": 6.21,
+       "exposure": 0.268,
+       "total_return": 4.6906
+      },
+      "SOLUSDT": {
+       "sharpe": -0.75,
+       "cagr": -0.2112,
+       "max_dd": -0.6679,
+       "trades": 7,
+       "win_rate": 0.143,
+       "profit_factor": 0.02,
+       "exposure": 0.077,
+       "total_return": -0.5523
+      }
+     },
+     "train_sharpe_mean": 0.4033333333333333
+    },
+    {
+     "params": {
+      "pct": 0.3
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.91,
+       "cagr": 0.2904,
+       "max_dd": -0.5267,
+       "trades": 13,
+       "win_rate": 0.308,
+       "profit_factor": 4.28,
+       "exposure": 0.262,
+       "total_return": 2.5749
+      },
+      "ETHUSDT": {
+       "sharpe": 1.03,
+       "cagr": 0.4371,
+       "max_dd": -0.4882,
+       "trades": 13,
+       "win_rate": 0.462,
+       "profit_factor": 6.94,
+       "exposure": 0.273,
+       "total_return": 5.1215
+      },
+      "SOLUSDT": {
+       "sharpe": -0.75,
+       "cagr": -0.2401,
+       "max_dd": -0.7268,
+       "trades": 9,
+       "win_rate": 0.222,
+       "profit_factor": 0.09,
+       "exposure": 0.097,
+       "total_return": -0.6053
+      }
+     },
+     "train_sharpe_mean": 0.39666666666666667
+    },
+    {
+     "params": {
+      "pct": 0.5
+     },
+     "train": {
+      "BTCUSDT": {
+       "sharpe": 0.88,
+       "cagr": 0.2953,
+       "max_dd": -0.5824,
+       "trades": 17,
+       "win_rate": 0.353,
+       "profit_factor": 4.02,
+       "exposure": 0.325,
+       "total_return": 2.6436
+      },
+      "ETHUSDT": {
+       "sharpe": 1.17,
+       "cagr": 0.6022,
+       "max_dd": -0.5207,
+       "trades": 17,
+       "win_rate": 0.529,
+       "profit_factor": 6.59,
+       "exposure": 0.347,
+       "total_return": 9.5403
+      },
+      "SOLUSDT": {
+       "sharpe": 0.15,
+       "cagr": -0.0358,
+       "max_dd": -0.824,
+       "trades": 11,
+       "win_rate": 0.182,
+       "profit_factor": 0.06,
+       "exposure": 0.18,
+       "total_return": -0.116
+      }
+     },
+     "train_sharpe_mean": 0.7333333333333333
+    }
+   ],
+   "smoothed_train_sharpe": [
+    0.4,
+    0.511,
+    0.565
+   ],
+   "chosen": {
+    "pct": 0.5
+   },
+   "grid_positive_frac": 0.778,
+   "test": {
+    "BTCUSDT": {
+     "sharpe": 0.6,
+     "cagr": 0.1356,
+     "max_dd": -0.4028,
+     "trades": 12,
+     "win_rate": 0.417,
+     "profit_factor": 2.06,
+     "exposure": 0.354,
+     "total_return": 0.4362
+    },
+    "ETHUSDT": {
+     "sharpe": -0.14,
+     "cagr": -0.0848,
+     "max_dd": -0.4882,
+     "trades": 12,
+     "win_rate": 0.417,
+     "profit_factor": 0.79,
+     "exposure": 0.251,
+     "total_return": -0.223
+    },
+    "SOLUSDT": {
+     "sharpe": 0.38,
+     "cagr": 0.0737,
+     "max_dd": -0.4547,
+     "trades": 13,
+     "win_rate": 0.385,
+     "profit_factor": 1.66,
+     "exposure": 0.309,
+     "total_return": 0.2243
+    }
+   },
+   "cost_ladder_test_sharpe": {
+    "BTCUSDT": {
+     "0.001": 0.77,
+     "0.0025": 0.72,
+     "0.0065": 0.6,
+     "0.013": 0.4
+    },
+    "ETHUSDT": {
+     "0.001": 0.01,
+     "0.0025": -0.03,
+     "0.0065": -0.14,
+     "0.013": -0.32
+    },
+    "SOLUSDT": {
+     "0.001": 0.51,
+     "0.0025": 0.47,
+     "0.0065": 0.38,
+     "0.013": 0.22
+    }
+   },
+   "dsr": {
+    "BTCUSDT": 0.001,
+    "ETHUSDT": 0.001,
+    "SOLUSDT": 0.0
+   },
+   "checks": {
+    "test_sharpe_mean": false,
+    "test_sharpe_each": false,
+    "test_dd_beats_hold": true,
+    "grid_robust": true,
+    "double_cost": true,
+    "enough_trades": true,
+    "dsr": false
+   },
+   "verdict": "REJECT"
+  }
+ },
+ "rotation": {
+  "grid": [
+   {
+    "params": {
+     "lookback": 30
+    },
+    "train": {
+     "sharpe": 1.68,
+     "cagr": 1.9583,
+     "max_dd": -0.7135,
+     "trades": 135,
+     "win_rate": 0.378,
+     "profit_factor": 2.73,
+     "exposure": 0.68,
+     "total_return": 224.7412
+    }
+   },
+   {
+    "params": {
+     "lookback": 60
+    },
+    "train": {
+     "sharpe": 1.42,
+     "cagr": 1.3947,
+     "max_dd": -0.8762,
+     "trades": 93,
+     "win_rate": 0.387,
+     "profit_factor": 3.18,
+     "exposure": 0.657,
+     "total_return": 77.5168
+    }
+   },
+   {
+    "params": {
+     "lookback": 90
+    },
+    "train": {
+     "sharpe": 1.29,
+     "cagr": 1.1012,
+     "max_dd": -0.8756,
+     "trades": 74,
+     "win_rate": 0.324,
+     "profit_factor": 2.89,
+     "exposure": 0.673,
+     "total_return": 39.8519
+    }
+   },
+   {
+    "params": {
+     "lookback": 120
+    },
+    "train": {
+     "sharpe": 1.62,
+     "cagr": 1.8082,
+     "max_dd": -0.7213,
+     "trades": 53,
+     "win_rate": 0.434,
+     "profit_factor": 4.88,
+     "exposure": 0.647,
+     "total_return": 173.0352
+    }
+   }
+  ],
+  "chosen": {
+   "lookback": 30
+  },
+  "test": {
+   "sharpe": -0.45,
+   "cagr": -0.3262,
+   "max_dd": -0.7533,
+   "trades": 123,
+   "win_rate": 0.309,
+   "profit_factor": 0.8,
+   "exposure": 0.643,
+   "total_return": -0.6751
+  },
+  "grid_positive_frac": 1.0,
+  "cost_ladder_test_sharpe": {
+   "0.001": 0.42,
+   "0.0025": 0.18,
+   "0.0065": -0.45,
+   "0.013": -1.44
+  },
+  "equal_weight_hold_test": {
+   "sharpe": 0.38,
+   "max_dd": -0.623
+  },
+  "dsr": 0.01,
+  "checks": {
+   "test_sharpe_mean": false,
+   "test_sharpe_each": null,
+   "test_dd_beats_hold": false,
+   "grid_robust": true,
+   "double_cost": false,
+   "enough_trades": true,
+   "dsr": false
+  },
+  "verdict": "REJECT"
+ },
+ "n_trials": {
+  "round1": 105,
+  "total": 184
+ }
+}

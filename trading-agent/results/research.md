@@ -1,6 +1,6 @@
 # Strategy tournament results
 
-Generated 2026-11-07T05:01:45+00:00 from Binance spot candles. Train 2019-01-01 to 2023-12-31, held-out 2024-01-01 to 2026-11-06. Costs 0.65% per side. Trials counted: 105.
+Generated 2026-11-07T05:38:06+00:00 from Binance spot candles. Train 2019-01-01 to 2023-12-31, held-out 2024-01-01 to 2026-11-06. Costs 0.65% per side. Trials counted: 105.
 
 ## Buy & hold benchmark (held-out)
 

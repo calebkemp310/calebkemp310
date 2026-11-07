@@ -16,7 +16,9 @@ EULER = 0.5772156649
 
 
 def daily_returns(equity: pd.Series) -> pd.Series:
-    return equity.resample("1D").last().dropna().pct_change().dropna()
+    """Equity on a daily grid. Bars longer than a day (weekly) are carried forward,
+    so every timeframe is scored on the same daily clock."""
+    return equity.resample("1D").last().ffill().pct_change().dropna()
 
 
 def sharpe(r: pd.Series) -> float:

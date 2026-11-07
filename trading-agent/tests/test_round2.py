@@ -74,3 +74,15 @@ def test_rotation_switch_costs_both_legs():
     b_qty = cash * 0.99 / opens["B"].iloc[2]
     assert res.equity.iloc[2] == pytest.approx(b_qty * closes["B"].iloc[2])
     assert len(res.trades) == 1
+
+
+def test_weekly_and_daily_sharpe_agree():
+    """Scoring a weekly equity curve must not inflate Sharpe vs the same path sampled daily."""
+    from agent import metrics
+    rng = np.random.default_rng(7)
+    idx = pd.date_range("2020-01-06", periods=7 * 300, freq="1D", tz="UTC")
+    eq = pd.Series(np.exp(np.cumsum(rng.normal(0.001, 0.03, len(idx)))), index=idx)
+    weekly = eq.iloc[::7]
+    s_d = metrics.sharpe(metrics.daily_returns(eq))
+    s_w = metrics.sharpe(metrics.daily_returns(weekly))
+    assert abs(s_w - s_d) < 0.5, (s_d, s_w)
