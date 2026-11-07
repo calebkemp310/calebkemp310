@@ -1,6 +1,6 @@
 # 24/7 Trading Agent: Gate 1 (Spec + Strategy Tournament)
 
-_Status: Round 2 done. Caleb approved the paper-trading design; Gates 2 and 3 (architecture + test plan) are in [DESIGN.md](DESIGN.md), **waiting for approval to build (Gate 4)**. Nothing in this folder can place an order._
+_Status: Paper trader built (Gate 4, [DESIGN.md](DESIGN.md)), with limits approved 2026-11-07. It runs on paper only; nothing in this folder can place a real order._
 _Data through 2026-11-06 (UTC daily close). Numbers come from `results/research.md`, produced by `python -m research.run_research`._
 
 ## 1. System overview
@@ -94,8 +94,8 @@ The risk engine below is still the spec any future candidate must run inside.
 
 - **No model in the order path.** An LLM may write reports, but it never creates, sizes or approves orders. Orders come only from deterministic strategy code and must pass the `RiskGate` checks in order.
 - **Position size:** at most 25% of the account per coin and 50% total. Size by volatility targeting, aiming for 20% annualized volatility per position. Never use full Kelly, and cap at quarter-Kelly if Kelly is ever used.
-- **Daily loss limit:** -2% of equity, measured since 00:00 UTC (_DESIGN.md proposes -3%, block-only; pending approval_). Hitting it flattens everything and blocks new entries until the next UTC day.
-- **Max drawdown:** -10% from the equity peak (_DESIGN.md proposes -25%, since -10% would have fired in 6 of 8 backtest years; pending approval_). Hitting it triggers the kill switch and needs Caleb to re-arm by hand.
+- **Daily loss limit:** -2% of equity, measured since 00:00 UTC **Approved change 2026-11-07: -3%, blocks new entries only (no flatten)**, per DESIGN.md §6.
+- **Max drawdown:** -10% from the equity peak **Approved change 2026-11-07: -25%**, since -10% would have fired in 6 of 8 backtest years. Hitting it triggers the kill switch and needs Caleb to re-arm by hand.
 - **Stale data:** if the latest closed bar is more than 2 bars old, or the price moved more than 3× ATR between ticks with no confirmation from a second feed, block entries and alert.
 - **API errors:** 3 consecutive errors, or 5 in 10 minutes, trigger a pause plus an alert. An order whose result is unknown gets reconciled against the account's order history before any retry, using idempotent client order IDs.
 - **Orders:** post-only limit orders (maker fee) at the touch, cancel-and-replace twice, then skip the trade. Never send a market order on entry.
@@ -129,7 +129,7 @@ I couldn't open agenkit.xyz from this environment, and no web result confirmed w
 | 1. Spec | This document, the data loader, the backtester, the tournament, and tests | **Done, waiting for approval** |
 | 2. Architecture | Module boundaries, the data-feed redundancy plan, and the venue decision (Kraken vs Coinbase) | **Done**: DESIGN.md |
 | 3. Plan | Test list for `RiskGate`, the kill switch, the order state machine, and reconciliation | **Done**: DESIGN.md §11 |
-| 4. Test-first build | Risk engine first, then paper broker, then live adapter | Not started |
+| 4. Test-first build | Risk engine first, then paper broker, then live adapter | **Paper trader built** (live adapter not started) |
 | 5. Review | Independent code review and a failure drill (pull the network mid-order) | Not started |
 | 6. Ship | 60 days of paper trading, then a ≤ $100 live pilot, each with sign-off | Not started |
 

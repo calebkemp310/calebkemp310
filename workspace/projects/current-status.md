@@ -8,5 +8,5 @@ _Last updated: 2026-11-07_
 - Skills: marketing/design/writing plugins enabled (PR #7, merged). Bump the pinned tags in `.claude/settings.json` to update them. Repo list + Kronos trial notes live in Notion.
 - Cloud environment: "calebkemp310 (Hugging Face access)" adds Hugging Face + PyTorch downloads for this repo's sessions.
 - Claude GitHub workflow: added; needs the `CLAUDE_CODE_OAUTH_TOKEN` repo secret before it can run.
-- Trading agent: Gate 1 + Round 2 done (`trading-agent/SPEC.md` section 11). Best = `vol_target_trend` (WATCH, fails luck test only). Paper-trading design (Gates 2+3) written in `trading-agent/DESIGN.md`. Waiting on Caleb: approve limit changes (daily -3% block-only, DD kill -25%), alert channel, and Gate 4 build.
+- Trading agent: Gate 1 + Round 2 done (`trading-agent/SPEC.md` section 11). Best = `vol_target_trend` (WATCH, fails luck test only). Paper trader built (Gate 4); goes live hourly once merged to main. Next: drills (kill from phone, stale feed), weekly heartbeat routine, then 90+ days of paper tracking.
 - Cloud environment now also allows data-api.binance.vision, data.binance.vision, api.exchange.coinbase.com, api.coinbase.com.

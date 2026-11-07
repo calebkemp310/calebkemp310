@@ -1,0 +1,80 @@
+name: Paper trader
+
+# Paper trading only: reads public prices, never holds an API key, never places a real order.
+# Design: trading-agent/DESIGN.md. State and the ledger live on the `paper-trading` branch.
+# Kill from a phone: add a file named KILL in trading-agent/ on main, or run this workflow with action=kill.
+
+on:
+  schedule:
+    - cron: "7 * * * *"   # hourly; each run is idempotent and catches up missed bars
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "run, kill (flatten + disarm) or rearm"
+        type: choice
+        options: [run, kill, rearm]
+        default: run
+
+permissions:
+  contents: write   # push state to the paper-trading branch
+  issues: write     # post alerts to the "Paper trading log" issue
+
+concurrency:
+  group: paper-trader
+  cancel-in-progress: false
+
+jobs:
+  cycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -q -r trading-agent/requirements.txt
+
+      - name: Check out state branch
+        run: |
+          git config --global user.name "paper-trader[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin paper-trading >/dev/null; then
+            git fetch -q --depth=1 origin paper-trading
+            git worktree add -q paper-state FETCH_HEAD
+            git -C paper-state checkout -q -B paper-trading
+          else
+            git worktree add -q --detach paper-state
+            git -C paper-state checkout -q --orphan paper-trading
+            git -C paper-state rm -rfq .
+          fi
+
+      - name: Run one cycle
+        working-directory: trading-agent
+        env:
+          ACTION: ${{ inputs.action || 'run' }}
+        run: python -m agent.runner --state-dir ../paper-state --outbox ../outbox.md --action "$ACTION"
+
+      - name: Save state
+        if: success()
+        working-directory: paper-state
+        run: |
+          git add -A
+          git commit -q -m "paper: cycle $(date -u +%Y-%m-%dT%H:%MZ)" || exit 0
+          git push -q origin HEAD:paper-trading
+
+      - name: Post alerts
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -s outbox.md ] || exit 0
+          num=$(gh issue list --state open --search 'in:title "Paper trading log"' --json number --jq '.[0].number')
+          if [ -z "$num" ]; then
+            url=$(gh issue create --title "Paper trading log" \
+              --body "Alerts from the paper trader (trading-agent/DESIGN.md): trades, freezes, limit hits, kills and a weekly summary.")
+            num="${url##*/}"
+          fi
+          gh issue comment "$num" --body-file outbox.md
