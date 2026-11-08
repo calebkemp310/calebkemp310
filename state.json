@@ -1,7 +1,7 @@
 {
- "armed": false,
+ "armed": true,
  "cash": 10000.0,
- "checksum": "57cfc9cc06cc77ddcbb79211ac2e8fb27baaf047c4f7b54210219aa4a9861daa",
+ "checksum": "daea7939d5fda400cae36de7574c2444d95950a4915e5aa7837d8a46ffc73fda",
  "daily_loss_alerted": null,
  "day": "2026-11-08",
  "day_start_equity": 10000.0,
@@ -11,13 +11,12 @@
   "recent": []
  },
  "frozen": false,
- "kill_reason": "manual kill (workflow button)",
  "last_processed_bar": {
   "BTC-USD": "2026-11-07",
   "ETH-USD": "2026-11-07"
  },
- "last_run": "2026-11-08T04:38:43.273348+00:00",
- "last_success": "2026-11-08T04:38:43.273348+00:00",
+ "last_run": "2026-11-08T04:39:48.651280+00:00",
+ "last_success": "2026-11-08T04:39:48.651280+00:00",
  "peak_equity": 10000.0,
  "positions": {},
  "shadow": {
