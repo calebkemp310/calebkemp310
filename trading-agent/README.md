@@ -15,7 +15,7 @@ with a virtual $10,000, using Coinbase public prices checked against Binance/Kra
 | You want to | Do this |
 |---|---|
 | See how it's doing | Open `report.md` on the `paper-trading` branch |
-| Get alerts | Watch the **Paper trading log** issue (trades, freezes, limit hits, kills, weekly summary) |
+| Get alerts | Watch the **Paper trading log** issue (trades, freezes, limit hits, kills, weekly summary). This needs Issues turned on in Settings → General → Features. Every alert is also kept in `alerts.md` on the `paper-trading` branch |
 | Stop everything now | Add a file named `KILL` in `trading-agent/` on `main` (GitHub app: Add file), or Actions → Paper trader → Run workflow → `kill` |
 | Start again after a kill | Delete the `KILL` file, then Actions → Paper trader → Run workflow → `rearm` |
 | Run a cycle now | Actions → Paper trader → Run workflow → `run` |
