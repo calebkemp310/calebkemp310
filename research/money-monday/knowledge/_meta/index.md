@@ -25,4 +25,4 @@ _No entries yet._
 
 ## Synthesis
 
-_No entries yet._
+- [[money-monday-check-ranking]] — which Money Monday check (low float, catalyst, former runner, unusual volume) best predicts a bigger Monday move; unusual volume is the only one that survives correction

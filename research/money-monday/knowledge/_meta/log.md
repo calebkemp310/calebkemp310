@@ -88,3 +88,13 @@ author: llm
 - **Deviation, logged per the plan's Deviations Log requirement:** catalyst was NOT blind-labeled for the 3 freshly-pulled cross-check tickers (WORX/MI/SOAR) -- no separate labeling subagent was dispatched for just 3 items, so their catalyst field is reported as `not_labeled` rather than guessed from the newsletter's own framing. This is a methodological narrowing (less complete than the main sample's labeling), not a result-affecting deviation, since cross-check 2 carries no hypothesis test.
 - **Also noted in crosschecks.json:** the newsletter's self-reported % moves (e.g. WORX "+210%") do not match this study's pre-registered outcome metric (max gain from the open) and are shown side-by-side rather than reconciled -- they are likely measured from a different baseline (e.g. multi-day or close-to-close) than daily high/open.
 - All premarket-volume checks for the 3 fresh tickers used the `prior_session` fallback (same as the May 11 rule), since these dates are far outside Webull's 180-day rolling minute-bar window.
+
+## [2026-11-09] meta | money-monday-checks coverage deviation (24 of 25 trading Mondays)
+- **Deviation, logged per the plan's own Verification requirement** ("graded.csv covers all 25 trading Mondays, or the gap is logged as a deviation"): `graded.csv` covers 24 of the 25 pre-registered trading Mondays (2026-05-11 through 2026-11-02). **2026-11-09 (today) is not included.**
+- Reason: this entire research project (Tasks 1-7) was executed ON 2026-11-09, the last Monday of the pre-registered window, before that day's trading session had completed. The outcome metric (max gain from the open = daily high/open - 1) cannot exist for a session still in progress, and the day's Benzinga premarket movers posts were only beginning to publish as data collection started (per `input/notes/data-availability.md`, Task 1). Including a necessarily-incomplete final data point would have required guessing at an unresolved outcome, which the frozen rules do not permit.
+- This is a scope-boundary deviation, not a data-quality one: n=301 across 24 Mondays already clears every pre-registered sufficiency threshold (Task 5/6), and dropping the one Monday that cannot yet have a resolved outcome does not bias the comparison between any check's pass/fail groups.
+
+## [2026-11-09] knowledge | money-monday-checks Task 8 (synthesis)
+- `knowledge/synthesis/money-monday-check-ranking.md` (status: review) -- Evidence base, results per hypothesis, check ranking, and "What stays open" sections per the plan's Task 8 spec
+- Linked from `knowledge/_meta/index.md` to clear the orphan-page lint check
+- `python scripts/lint-wiki.py` exits 0
