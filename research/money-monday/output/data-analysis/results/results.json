@@ -1,0 +1,141 @@
+{
+  "n_total": 301,
+  "n_catalyst_nonexcluded": 92,
+  "per_check": {
+    "low_float": {
+      "n_pass": 263,
+      "n_fail": 38,
+      "median_pass": 0.09558823529411753,
+      "median_fail": 0.07170233077979826,
+      "sufficient_n": true,
+      "U": 5670.5,
+      "p_raw": 0.08976556205678243,
+      "hodges_lehmann_shift": 0.019216228076239905,
+      "p_holm": 0.17953112411356487
+    },
+    "catalyst": {
+      "n_pass": 64,
+      "n_fail": 28,
+      "median_pass": 0.08932179582516464,
+      "median_fail": 0.11693681983841786,
+      "sufficient_n": true,
+      "U": 769.0,
+      "p_raw": 0.8603569995160187,
+      "hodges_lehmann_shift": -0.025603391637463502,
+      "p_holm": 0.8603569995160187
+    },
+    "former_runner": {
+      "n_pass": 49,
+      "n_fail": 252,
+      "median_pass": 0.11295681063122931,
+      "median_fail": 0.08452538145318667,
+      "sufficient_n": true,
+      "U": 7137.0,
+      "p_raw": 0.04209027188995762,
+      "hodges_lehmann_shift": 0.025772124122965145,
+      "p_holm": 0.12627081566987286
+    },
+    "unusual_volume": {
+      "n_pass": 102,
+      "n_fail": 199,
+      "median_pass": 0.1415465268676277,
+      "median_fail": 0.0655608214849921,
+      "sufficient_n": true,
+      "U": 13347.0,
+      "p_raw": 3.827431899638967e-06,
+      "hodges_lehmann_shift": 0.06288243196390442,
+      "p_holm": 1.5309727598555867e-05
+    }
+  },
+  "leave_one_out": {
+    "low_float": {
+      "n_full": 1,
+      "n_missing_low_float": 0,
+      "median_full": 0.07645525629887051,
+      "median_missing_low_float": null,
+      "sufficient_n": false
+    },
+    "catalyst": {
+      "n_full": 1,
+      "n_missing_catalyst": 1,
+      "median_full": 0.07645525629887051,
+      "median_missing_catalyst": 0.010204081632652962,
+      "sufficient_n": false
+    },
+    "former_runner": {
+      "n_full": 1,
+      "n_missing_former_runner": 21,
+      "median_full": 0.07645525629887051,
+      "median_missing_former_runner": 0.0769230769230771,
+      "sufficient_n": false
+    },
+    "unusual_volume": {
+      "n_full": 1,
+      "n_missing_unusual_volume": 8,
+      "median_full": 0.07645525629887051,
+      "median_missing_unusual_volume": 0.025252525252525304,
+      "sufficient_n": false
+    }
+  },
+  "ols": {
+    "run": false,
+    "reason": "n=92 < 100, regression not run per pre-registered threshold"
+  },
+  "sensitivity_excl_stale_float": {
+    "n": 219,
+    "per_check": {
+      "low_float": {
+        "n_pass": 183,
+        "n_fail": 36,
+        "median_pass": 0.07822410147991521,
+        "median_fail": 0.06807896003851699,
+        "sufficient_n": true,
+        "U": 3602.0,
+        "p_raw": 0.18807518009368784,
+        "hodges_lehmann_shift": 0.011846018248573453
+      },
+      "catalyst": {
+        "n_pass": 49,
+        "n_fail": 18,
+        "median_pass": 0.0769230769230771,
+        "median_fail": 0.08029528905338534,
+        "sufficient_n": true,
+        "U": 378.0,
+        "p_raw": 0.8154643264752386,
+        "hodges_lehmann_shift": -0.02182914885118692
+      },
+      "former_runner": {
+        "n_pass": 34,
+        "n_fail": 185,
+        "median_pass": 0.08292518966676277,
+        "median_fail": 0.07407407407407396,
+        "sufficient_n": true,
+        "U": 3684.0,
+        "p_raw": 0.0563539765535489,
+        "hodges_lehmann_shift": 0.026318925116595615
+      },
+      "unusual_volume": {
+        "n_pass": 62,
+        "n_fail": 157,
+        "median_pass": 0.12870614035087713,
+        "median_fail": 0.06488549618320616,
+        "sufficient_n": true,
+        "U": 6154.0,
+        "p_raw": 0.001159136963036489,
+        "hodges_lehmann_shift": 0.04463951655773146
+      }
+    },
+    "ols": {
+      "run": false,
+      "reason": "n=67 < 100, regression not run per pre-registered threshold"
+    }
+  },
+  "verdicts": {
+    "H1": "rejected",
+    "H2": "rejected",
+    "H3": "rejected",
+    "H4": "supported",
+    "H5": "insufficient",
+    "H5_note": "Based on regression 95% CIs for the four check coefficients; run=False"
+  }
+}
