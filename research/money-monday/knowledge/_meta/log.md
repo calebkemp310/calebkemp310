@@ -66,3 +66,15 @@ author: llm
   - unusual_volume: True=102, False=199
   - stale_float flagged: 82/301
 - n=301 overall clears the n>=100 threshold for the regression in Task 6
+
+## [2026-11-09] task | money-monday-checks Task 6 (analysis)
+- `output/data-analysis/analyze.py` -> `output/data-analysis/results/results.json`
+- Per-check Mann-Whitney (one-sided, Holm-corrected across 4 checks), n=301:
+  - H1 low_float: median 0.0956 (pass) vs 0.0717 (fail), p_holm=0.180 -> REJECTED
+  - H2 catalyst: median 0.0893 (yes) vs 0.1169 (no), p_holm=0.860 -> REJECTED (points the wrong direction, not just non-significant)
+  - H3 former_runner: median 0.1130 vs 0.0845, p_holm=0.126 -> REJECTED (p_raw=0.042 looked promising but doesn't survive Holm correction)
+  - H4 unusual_volume: median 0.1415 vs 0.0656, p_holm=1.5e-5 -> SUPPORTED, the only check that clears the bar
+- Leave-one-out (4/4 group vs "3/4 missing X"): only 1 ticker ever graded a true 4/4, so every leave-one-out comparison is "insufficient_n" per the stop rule -- correctly not reported as a finding
+- OLS regression did NOT run: it requires catalyst as a covariate, so it can only use the 92 non-excluded rows, below the pre-registered n>=100 threshold. This is a real limitation, not a bug: the catalyst check's 69% exclusion rate (Task 4) starves the regression. H5 is therefore marked "insufficient" rather than forced.
+- Sensitivity run excluding stale_float (n=219): same story holds -- unusual_volume p_raw=0.0012 (still clearly significant), former_runner weakens further (p_raw=0.056), catalyst and low_float stay non-significant. Main finding is robust to the stale-float exclusion.
+- Verdicts: H1 rejected, H2 rejected, H3 rejected, H4 supported, H5 insufficient (regression underpowered by catalyst exclusions)
