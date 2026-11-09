@@ -1,0 +1,283 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/leiverkus/research-superpowers/schema/knowledge-frontmatter.schema.json",
+  "title": "Research Wiki Frontmatter",
+  "description": "Frontmatter schema for knowledge/**/*.md pages in research projects using the research-superpowers plugin. Single source of truth — consumed by scripts/lint-wiki.py and VS Code yaml.schemas, referenced by skills.",
+  "type": "object",
+  "required": [
+    "title",
+    "type",
+    "created",
+    "updated",
+    "status",
+    "author"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable page title."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "entity",
+        "concept",
+        "source",
+        "synthesis"
+      ],
+      "description": "Page type. entity = person/place/artefact/institution; concept = theory/method/term; source = cited work; synthesis = cross-source argument."
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO YYYY-MM-DD. Set once at creation."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO YYYY-MM-DD. Bump on every substantive edit."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "review",
+        "stable"
+      ],
+      "description": "draft = being written; review = structurally complete, awaits human check; stable = human-reviewed, citable. Only the user sets stable — agents must not self-promote."
+    },
+    "author": {
+      "type": "string",
+      "enum": [
+        "human",
+        "llm",
+        "mixed"
+      ],
+      "description": "Who produced the content. human = user; llm = unreviewed LLM; mixed = LLM draft + human edits."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Topical tags. Free vocabulary."
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Wikilinks to source pages, e.g. \"[[finkelstein-2003]]\"."
+    },
+    "bibkey": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*-[0-9]{4}[a-z]?-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "BibTeX citation key. Required when type = source; matches the entry in output/bibtex/references.bib. Shape: surname-year-shorttitle (e.g. finkelstein-2003-low-chronology), all lowercase ASCII. This is a cross-project JOIN KEY — wiki-global-graph.py matches sources across projects on it — so it must be a deterministic function of the work's own metadata, not a per-project choice: the same work must yield the same key everywhere. It is also the PDF filename stem in the shared library (<library>/pdf/<bibkey>.pdf), so bibkey == PDF stem is a checkable invariant. Add a disambiguation letter after the year for same-author-same-year clashes (finkelstein-2003b-...)."
+    },
+    "depth": {
+      "type": "string",
+      "enum": ["map", "standard", "deep"],
+      "default": "standard",
+      "description": "Optional, type=source only. How deeply this source is worked up \u2014 the knob that makes thoroughness affordable, because twenty theses for a four-page note is as wrong as one paragraph for an excavation volume. map = bibliography plus the section map only, no Kernthesen: for reference works one CONSULTS rather than reads (handbooks, lexica, gazetteers). It is not a licence for thinness but an honest statement, and anyone quoting from the source must raise it to standard first. standard = section map plus at least ten Kernthesen plus focus blocks; the default. deep = section map plus at least twenty Kernthesen, long form, verbatim quotation throughout \u2014 for the handful of works a project actually rests on, typically its own author's. Set from the project's Ingest-depth block in CLAUDE.md or on the user's explicit instruction; a re-ingest may raise it, never lower it.",
+      "examples": [
+        "deep"
+      ]
+    },
+    "parent_bibkey": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*-[0-9]{4}[a-z]?-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Optional, type=source only. The bibkey of the VOLUME this source is a chapter in, for a chapter that has no PDF of its own because the volume does. It satisfies lint-wiki.py's NO-ORIGINAL gate when <library>/pdf/<parent_bibkey>.pdf exists \u2014 the original IS on disk, just under the volume's key. Unlike original_unavailable it claims nothing about what can exist; it points at a file. If the volume is missing too, the page still fails the gate, but the report names the VOLUME to acquire instead of each chapter separately \u2014 nine chapters of one handbook are one download, not nine. Do NOT use it for a volume you do not have (that is input/bibliography/acquisition-todo.md), and do NOT use it as a generic 'see also': it is a claim about where the bytes are.",
+      "examples": [
+        "steiner-killebrew-2014-oxford-handbook-levant"
+      ]
+    },
+    "based_on": {
+      "type": "string",
+      "enum": [
+        "original",
+        "review",
+        "preprint",
+        "prior-version"
+      ],
+      "default": "original",
+      "description": "Provenance of the ingested text for type=source. original = the cited work itself (default; field may be omitted); review/preprint/prior-version = a user-approved substitute ingested because the original could not be acquired. Replace with original on re-ingest of the original. Set by ingest-source; see its 'Provenance of substitutes' section."
+    },
+    "original_unavailable": {
+      "type": "object",
+      "required": [
+        "form",
+        "note"
+      ],
+      "additionalProperties": false,
+      "description": "Optional, type=source only. Declares that NO PDF OF THIS WORK CAN EXIST — not that one has not been acquired yet. It exempts the page from lint-wiki.py's NO-ORIGINAL gate, which otherwise assumes every bibkey resolves to <library>/pdf/<bibkey>.pdf. That assumption is right for articles and wrong for a printed monograph on the shelf or an HTML-only publication. The exemption is NOT silence: the linter counts and reports declared exceptions, because a wiki carrying forty of them is telling you something about its evidence base. Do NOT use it for a paywalled PDF you have not fetched (that belongs in input/bibliography/acquisition-todo.md), for a forthcoming work (the page is premature), or for a substitute you actually read (that is `based_on`).",
+      "properties": {
+        "form": {
+          "type": "string",
+          "enum": [
+            "physical",
+            "html-only"
+          ],
+          "description": "physical = a print work read from a physical copy (monograph, offprint) with no digital edition available to you. html-only = published online in HTML with no PDF issued by the publisher (e.g. Internet Archaeology) — note that a browser print-to-PDF does not carry the publication's pagination, so cite by section, not by printed page."
+        },
+        "note": {
+          "type": "string",
+          "pattern": "\\S",
+          "description": "Why no PDF can exist, and how the cited passages remain checkable — e.g. which edition you read, whether the used chapters were scanned, or which section numbers the citations use. A bare 'is a book' is not enough: the point of the original is that someone can re-check a quotation."
+        }
+      }
+    },
+    "hypothesis": {
+      "type": "string",
+      "description": "Linked hypothesis slug from the research plan. Used on type = synthesis."
+    },
+    "bibliography": {
+      "type": "string",
+      "description": "Relative path to the project's BibTeX file (typically ../../output/bibtex/references.bib). Optional; only needed if a page is rendered standalone via Quarto. In the plain-Markdown wiki, citations resolve when the page is pulled into output/."
+    },
+    "methodology": {
+      "type": "string",
+      "enum": [
+        "hermeneutic",
+        "quantitative",
+        "mixed"
+      ],
+      "description": "Optional override for project-level methodology. Drives whether pre-registration gates apply. Defaults to the project-level setting in the root CLAUDE.md frontmatter."
+    },
+    "wikidata_qid": {
+      "type": "string",
+      "pattern": "^Q[0-9]+$",
+      "description": "Wikidata entity ID (e.g. Q173799 for Tel Megiddo, Q483639 for cloud computing). The PRIMARY cross-project join key on both type=entity and type=concept — Wikidata covers named entities and concepts alike, where getty_aat_id (art/architecture/heritage only) does not. Resolvable via dao-paper-search-mcp resolve_author / resolve_site, or wikidata.org."
+    },
+    "idai_gazetteer_id": {
+      "type": "string",
+      "pattern": "^[0-9]+$",
+      "description": "iDAI.gazetteer ID (e.g. 2048473). Used on type=entity for archaeological places. Resolvable via dao-paper-search-mcp resolve_site."
+    },
+    "gnd_id": {
+      "type": "string",
+      "pattern": "^[0-9X-]+$",
+      "description": "GND (Gemeinsame Normdatei) authority record (e.g. 118533533). Used on type=entity for persons in German-language scholarship."
+    },
+    "orcid": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$",
+      "description": "ORCID iD (e.g. 0000-0002-1825-0097). Used on type=entity for living researchers — the authority key that actually covers working scientists (where GND / Wikidata often do not), so it is the reliable cross-project join key for method / software papers. Bare iD, no URL. Resolvable via dao-paper-search resolve_author (orcid field) or orcid.org."
+    },
+    "getty_aat_id": {
+      "type": "string",
+      "pattern": "^300[0-9]{6}$",
+      "description": "Getty AAT (Art & Architecture Thesaurus) subject ID (e.g. 300054327 for 'archaeology'). OPTIONAL on type=concept, layered on top of the wikidata_qid join key: it adds the curated art/architecture/heritage thesaurus (with its broader/narrower hierarchy) where a precise AAT term exists. AAT is heritage-only — most modern / DH / method concepts have no term (measured: 2 of 19 in one project), so wikidata_qid is the primary key and this is a bonus, not the default. Quote the bare 9-digit iD ('300xxxxxx') so YAML keeps it a string, not an integer. Look up at vocab.getty.edu/aat."
+    },
+    "relations": {
+      "type": "array",
+      "description": "Optional structured, confidence-tagged relations to other wiki pages. Complements free-text wikilinks and makes relation type and confidence machine-readable; consumed by scripts/wiki-to-graph.py and validated by scripts/lint-wiki.py. Pages without this field remain valid.",
+      "items": {
+        "type": "object",
+        "required": [
+          "target",
+          "type",
+          "confidence"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Target page slug (filename without extension), e.g. finkelstein-2003. Must resolve to an existing knowledge page (checked by lint-wiki.py)."
+          },
+          "type": {
+            "type": "string",
+            "description": "Relation type. Free vocabulary; common values: cites, contradicts, builds-on, mentions, supports."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "extracted",
+              "inferred",
+              "ambiguous",
+              "asserted"
+            ],
+            "description": "extracted = explicitly supported by the source (e.g. verbatim quote with page); inferred = added by the model; ambiguous = relation unclear; asserted = a decision the project made, not a finding it read \u2014 the edge is grounded in an editorial act (a position taken while writing, a controversy the work decides) and in no source, so neither extracted nor inferred is true of it. Requires a `because` naming the decision. The inferred+ambiguous share is reported as the inference-rate by lint-wiki.py; asserted is counted and reported separately, because it measures something else \u2014 how much the project asserts on its own authority \u2014 and folding the two together would make both unreadable."
+          },
+          "because": {
+            "type": "string",
+            "description": "Optional one-line rationale for the relation (why A relates to B), ideally with a quote or page reference. Recorded per edge, shown in the graph viz and queries; the natural place to ground an inferred relation when hardening it to extracted."
+          }
+        }
+      }
+    },
+    "review_flags": {
+      "type": "array",
+      "description": "Optional single-page content-review findings, raised by the semantic-wiki-review skill (or a human reviewer). A DISTINCT axis from `status` and from `relations`: `status` is human-owned maturity (draft/review/stable) and is never touched by a review; `relations: contradicts` records a conflict BETWEEN two pages; `review_flags` records a concern about THIS page's own content (an overstatement, a weakly-supported claim, a stale assertion). A page can be `status: stable` AND carry an open flag — that is the important case (a blessed page a newer source now undercuts). An `open` flag gates drafting: `drafting-manuscript` will not draft from the page without a logged override, and `wiki-lint` surfaces open flags (it does not fail CI on them). Cleared/kept for audit via `state: resolved`, not by deletion. Pages without this field remain valid.",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "state",
+          "raised_by",
+          "detected"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "overstatement",
+              "weak-support",
+              "stale",
+              "missing-citation",
+              "open-question"
+            ],
+            "description": "The class of concern. overstatement = epistemic overreach (claim stronger than the source supports); weak-support = assertion without a resolving [[source]] / @citekey; stale = superseded or complicated by a newer ingest; missing-citation = a claim that needs a citation it lacks; open-question = an unresolved point flagged for the author."
+          },
+          "detail": {
+            "type": "string",
+            "description": "Optional one-line description of the concern, ideally quoting the flagged claim. Recommended — it is what makes the flag actionable without re-reading the audit report."
+          },
+          "raised_by": {
+            "type": "string",
+            "description": "Who raised the flag: 'semantic-wiki-review' for the content-audit skill, or a human reviewer's name/handle."
+          },
+          "detected": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO YYYY-MM-DD when the flag was raised."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "open",
+              "resolved"
+            ],
+            "description": "open = unresolved; gates drafting and is surfaced by lint. resolved = addressed; kept as an audit trail rather than deleted."
+          },
+          "resolved": {
+            "type": "string",
+            "format": "date",
+            "description": "Optional ISO YYYY-MM-DD when the flag moved to state=resolved."
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "source"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "bibkey"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/extensions.json
+
+# The path to the shared source library. MACHINE-LOCAL — it differs between the
+# laptop and the institute machine, so committing it would break every other
+# checkout. Resolved by scripts/library.py (env RESEARCH_LIBRARY → this file →
+# ~/.config/research-superpowers/library).
+.research-library
+
+# Team-Kollaboration: Nextcloud-Symlinks und extern synchronisierte Ordner
+input/data-shared
+input/data-nextcloud
+
+# Large data files (track with Git LFS or exclude)
+input/data/**/*.tif
+input/data/**/*.shp
+input/data/**/*.dbf
+input/data/**/*.shx
+input/data/**/*.prj
+input/data/**/*.gpkg
+*.sqlite
+
+# Source bibliography PDFs — human-owned, kept local (Zotero group library /
+# Nextcloud, see CLAUDE.md); too large and copyright-bound to commit. Downloaded
+# by acquire-sources into input/bibliography/. The text artefacts there
+# (literaturguide.md, audit-log-*.json, references.bib) stay tracked.
+# If you do want them versioned, use Git LFS instead of removing these rules.
+# Both lines: flat (current convention) AND per-source subfolders (older layout,
+# e.g. input/bibliography/<slug>/<slug>.pdf) — nested PDFs must be caught too.
+input/bibliography/*.pdf
+input/bibliography/**/*.pdf
+
+# Output build artifacts
+output/**/_output/
+output/**/_site/
+output/**/_book/
+output/**/.quarto/
+output/**/*.tex
+output/**/*.log
+output/**/*.aux
+output/presentation/_output/
+output/presentation/.quarto/
+output/presentation/*.tex
+output/presentation/*.log
+output/presentation/*.aux
+output/presentation/*.nav
+output/presentation/*.snm
+output/presentation/*.toc
+output/presentation/*.vrb
+
+# ...but keep the hand-authored preamble sources (referenced via
+# include-in-header). Only Quarto-generated .tex are build artifacts.
+!output/**/_preamble.tex
+
+# CI/CD
+public/
+
+# Python build artifacts — anywhere, not just under output/. The scripts in
+# scripts/ import each other by path (bib-subset.py loads library.py, lint-wiki.py),
+# so running any of them writes scripts/__pycache__/ — which showed up as untracked
+# noise in all 17 live projects because the old rules were path-specific.
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+output/code/venv/
+output/code/node_modules/
+
+# Generated knowledge-graph export (scripts/wiki-to-graph.py)
+knowledge/_meta/graph/
+
+# Keep directory structure
+!**/.gitkeep

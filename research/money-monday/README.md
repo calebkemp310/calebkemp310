@@ -1,0 +1,231 @@
+# Research Project Template
+
+An LLM-supported research wiki following the **Input → Knowledge → Output**
+pattern, inspired by
+[Karpathy's LLM wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
+
+You collect sources, the LLM turns them into a structured, cross-referenced
+wiki, and publications — articles, books, presentations — flow out of the
+wiki.
+
+## What is this?
+
+This repository is a **template for scientific research projects**. It
+provides:
+
+- A clean folder structure that separates raw material, knowledge, and
+  publications
+- Conventions for an LLM-generated wiki in plain Markdown (`.md`)
+- Ready-made Quarto templates for book projects, journal articles, and
+  presentations with Makefiles
+- Team workflows over GitLab, Zotero, and Nextcloud
+- Automatic publication rendering as a website (GitLab Pages)
+- A lint script for structural checks on the wiki
+- A knowledge-graph layer: export the wiki to an interactive offline `graph.html`
+  (+ JSON/GraphML) and query it live via CLI sub-commands or a bundled MCP server
+
+## Quickstart
+
+### 1. Fork the repository
+
+Click **Fork** in GitLab. Name the new repository after your project.
+
+### 2. Clone locally and set up
+
+```bash
+git clone git@gitlab.your-institution.de:your-name/your-project.git
+cd your-project
+```
+
+### 3. Write the project description
+
+Edit `input/description/project-description.md` — fill in the research
+question, methodology, scope, and collaborators. The LLM agent reads this
+file at the start of every session as orientation.
+
+### 4. Set up Zotero
+
+- Add your institution email to your Zotero account (institutional licence
+  gives you unlimited storage)
+- Create a Zotero group and invite team members
+- Install Better BibTeX and configure auto-export to
+  `output/bibtex/references.bib`
+
+### 5. Process your first source
+
+```bash
+# Start the LLM agent (Claude Code or OpenCode)
+claude    # or: opencode
+
+# In the agent:
+> Ingest the "Finkelstein 2003" article from Zotero.
+```
+
+The agent reads the project description, finds the article via the Zotero
+MCP server, creates a source page in the wiki, and updates the index and
+log.
+
+### 6. Read the wiki
+
+The wiki is plain Markdown — no build step. Open the `knowledge/` folder in
+**Foam** or **Obsidian** for wikilinks, backlinks, and a graph view, or
+browse it directly in the GitLab/GitHub repository.
+
+### 7. Explore the knowledge graph
+
+```bash
+# Interactive offline visualisation (+ JSON/GraphML for scripting / Gephi):
+python scripts/wiki-to-graph.py        # → open knowledge/_meta/graph/graph.html
+
+# Query the live wiki from the terminal (recomputed each call — always current):
+python scripts/wiki-to-graph.py neighbors <slug> --depth 2
+python scripts/wiki-to-graph.py path <a> <b>
+python scripts/wiki-to-graph.py god-nodes      # most-connected pages
+python scripts/wiki-to-graph.py bridges        # load-bearing entities
+python scripts/wiki-to-graph.py communities    # thematic clusters (auto-detected)
+python scripts/wiki-to-graph.py relations --type contradicts
+python scripts/wiki-to-graph.py stats          # + --json on any query
+```
+
+The same queries are also available to your LLM agent as **MCP tools** —
+`.mcp.json` registers the bundled `scripts/graph_mcp.py` server for Claude Code
+automatically (no install, no network); OpenCode setup is in `CLAUDE.md`. So in
+a session you can just ask "which entity bridges my sources?" or "show the
+graph".
+
+## Structure
+
+```
+input/                 Raw material (immutable, maintained by humans)
+├── description/       Project description and research question
+├── bibliography/      PDFs (managed in Zotero)
+├── data/              Research data (shared via Nextcloud)
+├── notes/             Field notes, memos
+└── ideas/             Hypotheses, questions
+
+knowledge/             LLM-generated wiki (plain Markdown .md)
+├── entities/          People, places, sites, artefacts
+├── concepts/          Theories, methods, terms
+├── sources/           Summaries of individual sources
+├── synthesis/         Cross-cutting analyses and theses
+├── assets/            Figures and diagrams from sources
+└── _meta/             Index and log
+
+output/                Publication-ready artefacts
+├── book/              Quarto book project with chapters
+├── article/           Scholarly article with abstract
+├── presentation/      Talks (Reveal.js, Beamer, PowerPoint)
+├── data-analysis/     Scripts and notebooks
+├── code/              Software repository
+└── bibtex/            Bibliography and CSL styles
+
+scripts/                Wiki tooling
+├── lint-wiki.py        Structural check (frontmatter, links, orphans)
+└── wiki-to-graph.py    Graph export (HTML/JSON/GraphML) + live queries
+                        (graph_mcp.py registers the same as MCP tools)
+```
+
+| Area | Who writes | Who reads |
+|---------|-------------|-----------|
+| `input/` | Human | LLM |
+| `knowledge/` | LLM | Human + LLM |
+| `output/` | Human + LLM | All |
+
+## Workflows
+
+| Workflow | Trigger | What happens |
+|----------|----------|-------------|
+| **Ingest** | New source in Zotero | LLM reads the source, creates wiki pages, updates the index |
+| **Query** | Ask a research question | LLM searches the wiki and answers with references |
+| **Lint** | Periodic / on request | Script + LLM check structure, links, contradictions |
+| **Draft** | Request a manuscript section | LLM produces a draft from wiki content with citations |
+
+Details: → [CLAUDE.md](CLAUDE.md)
+
+## Makefiles
+
+The publication templates each have a Makefile (the wiki needs none — it is
+plain Markdown). Overview:
+
+```bash
+# Book project
+cd output/book
+make pdf               # PDF (KOMA-Script scrbook)
+make html              # HTML website
+make docx              # Word
+make epub              # e-book
+
+# Scholarly article
+cd output/article
+make pdf               # PDF (KOMA-Script scrartcl)
+make html              # HTML
+make docx              # Word
+
+# Presentation
+cd output/presentation
+make slides            # Reveal.js HTML slides
+make pptx              # PowerPoint
+make beamer            # LaTeX Beamer PDF
+make handout           # A4 handout PDF
+```
+
+## Prerequisites
+
+| Software | For what | Install (macOS) |
+|----------|-------|---------------------|
+| [Quarto](https://quarto.org) | All outputs | `brew install quarto` |
+| XeLaTeX | PDF output | `quarto install tinytex` |
+| [Zotero](https://zotero.org) + Better BibTeX | Bibliography | zotero.org/download |
+| Python 3 + PyYAML | Lint script | `pip install pyyaml` |
+| Gentium Plus, Ezra SIL, Noto Sans, Fira Code | Fonts for PDF (Semitic transcription: translit. + Greek + Hebrew) | See `output/README.md` |
+
+Optional tools:
+
+| Software | For what |
+|----------|-------|
+| [VS Code](https://code.visualstudio.com) + Foam | Wiki navigation, graph view |
+| [Obsidian](https://obsidian.md) | Alternative wiki navigation |
+| [Claude Code](https://docs.claude.com) / [OpenCode](https://opencode.ai) | LLM agent |
+| Zotero MCP Server | LLM access to your library |
+| Nextcloud | Shared research data |
+
+## Team use
+
+This template is designed for collaborative research projects:
+
+- **Git** (via GitLab) for the wiki and publications
+- **Zotero Group Library** for the shared bibliography
+  (institutional licence for unlimited storage)
+- **Nextcloud** for large research data (geospatial, images)
+- **Merge requests** for reviewing wiki ingests
+- **GitLab Pages** for automatic publication rendering
+
+Branch conventions, roles, and the full team workflow are documented in
+[CLAUDE.md](CLAUDE.md#team-collaboration).
+
+## Customise
+
+After forking, edit these files:
+
+1. **`input/description/project-description.md`** — your research question
+   and project description
+2. **`CLAUDE.md` → Project-specific conventions** — language, terminology,
+   special page types
+3. **`output/`** — adapt the templates to your publisher /
+   journal (CSL style, document class, fonts)
+4. **`.gitlab-ci.yml`** — URL and paths for your GitLab instance
+
+The example pages (prefix `_example-`) in `knowledge/` show the expected
+style and can be deleted once you have your own content.
+
+## License
+
+> [Add your license here, e.g. CC BY 4.0 for the template, separate
+> license for the research content.]
+
+## Acknowledgements
+
+Concept based on [Karpathy's LLM wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
+Tools: [Quarto](https://quarto.org),
+[Zotero](https://zotero.org),
+[Foam](https://foambubble.github.io/foam/).

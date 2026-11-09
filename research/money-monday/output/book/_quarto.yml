@@ -1,0 +1,72 @@
+project:
+  type: book
+  output-dir: _output
+
+book:
+  title: "Monograph title"
+  subtitle: "Subtitle"
+  author:
+    - name: "Firstname Lastname"
+      orcid: "0000-0000-0000-0000"
+      affiliation: "Institution / Institute"
+    - name: "Second Author"
+      affiliation: "Institution / Institute"
+  date: today
+  date-format: "D MMMM YYYY"
+  language: en
+  chapters:
+    - index.qmd
+    - text/01-introduction.qmd
+    - text/02-state-of-the-field.qmd
+    - text/03-methodology.qmd
+    - text/04-results.qmd
+    - text/05-discussion.qmd
+    - text/06-conclusion.qmd
+    - backmatter/references.qmd
+  appendices:
+    - backmatter/appendix-a.qmd
+
+bibliography: ../bibtex/references.bib
+csl: ../bibtex/csl/chicago-author-date.csl
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    lang: en
+  pdf:
+    documentclass: scrbook
+    classoption:
+      - twoside
+      - open=right
+      - BCOR=15mm
+    papersize: a4
+    fontsize: 11pt
+    mainfont: "Gentium Plus"      # Latin transliteration (ḥ ṣ ṭ ʾ ʿ ā ī ū) + polytonic Greek
+    sansfont: "Noto Sans"         # headings: broad diacritic coverage incl. ʾ / ʿ
+    monofont: "Fira Code"
+    number-sections: true
+    toc: true
+    toc-depth: 3
+    lof: true
+    lot: true
+    lang: en
+    include-in-header:
+      - template/_preamble.tex
+  docx:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    lang: en
+  epub:
+    toc: true
+    toc-depth: 3
+    lang: en
+
+crossref:
+  fig-prefix: "Fig."
+  tbl-prefix: "Tab."
+  sec-prefix: "Sect."
+  eq-prefix: "Eq."
