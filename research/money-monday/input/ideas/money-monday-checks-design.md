@@ -4,7 +4,7 @@ type: design
 created: 2026-11-09
 updated: 2026-11-09
 tags: [trading, us-small-caps, money-monday, quantitative]
-status: draft
+status: approved
 author: mixed
 ---
 

@@ -13,3 +13,8 @@ author: llm
 - Ordnerstruktur angelegt
 - Schema-Dokument (CLAUDE.md) erstellt
 - Index und Log initialisiert
+
+## [2026-11-09] plan | money-monday-checks
+- Design approved by Caleb: `input/ideas/money-monday-checks-design.md`
+- Plan written: `input/ideas/money-monday-checks-plan.md` (status: draft, awaiting pre-registration sign-off)
+- Correction: May 11 to Nov 9, 2026 holds 27 Mondays (the design said 26); 25 are trading days after Memorial Day and Labor Day. Window unchanged.
