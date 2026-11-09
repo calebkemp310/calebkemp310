@@ -3,7 +3,7 @@ title: "Which Money Monday check best predicts a bigger Monday move in small-cap
 type: plan
 created: 2026-11-09
 updated: 2026-11-09
-status: draft
+status: pre-registered
 author: mixed
 design: "[[money-monday-checks-design]]"
 ---
