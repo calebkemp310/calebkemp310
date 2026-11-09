@@ -37,3 +37,13 @@ author: llm
 - Coverage gap: each Monday has 3-5 of ~6-8 possible sector posts (search_news returns no pagination key); not exhaustively gap-filled given the Task 3 time pressure (180-day minute-bar window). The universe is biased toward the largest movers per sector, as already stated in the design doc.
 - 1 post (the May 11 general "20 Stocks Moving Premarket" roundup) has a different, unparsed format; that Monday is already covered by 4 sector posts, so not fixed.
 - Task 3 (premarket bars, daily bars, share counts) dispatched to a background worker; results to follow.
+
+## [2026-11-09] task | money-monday-checks Task 3 (market data pull)
+- Premarket M5 bars: all 23 Mondays (2026-05-18 to 2026-11-02) returned real data, no dates aged out of Webull's 180-day window
+- Daily bars: all 24 Mondays (incl. 2026-05-11) returned 31-bar history per ticker
+- Share snapshots: 253 of 270 unique tickers resolved
+- 17 tickers found delisted/invalid across the window: ALOT, AMPGR, ANY, BRNS, FTRK, GETY, GNTA, HCWC, JFB, LGLR, MIMI, RITR, SBEV, SNSE, VSME, VTAK, WALD -> `input/data/bars/invalid_symbols.txt`
+- `output/data-analysis/features.py` built `input/data/features.csv`: 301 of 320 universe rows survived (19 skipped for tickers with zero daily bars, i.e. the above delisted set intersected with the universe)
+- Spot-check: CLIK and HTCO (2026-05-11) both show `volume_basis=prior_session` per the pre-registered fallback; 14 rows total use that basis, exactly the May 11 Monday's universe size
+- `stale_float` flagged on 82/301 rows (27%) via two proxies: Monday volume > 50x current share count, or 52-week high > 10x Monday's open (reverse-split signal). This is a conservative proxy for "offering/conversion/reverse split in the prior 30 days" since share snapshots alone don't carry that event history -- noted as a limitation for the synthesis write-up.
+- `max_gain` (the outcome) is in its own column; grade.py (Task 5, next) must not read it.
