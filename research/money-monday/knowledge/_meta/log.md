@@ -18,3 +18,6 @@ author: llm
 - Design approved by Caleb: `input/ideas/money-monday-checks-design.md`
 - Plan written: `input/ideas/money-monday-checks-plan.md` (status: draft, awaiting pre-registration sign-off)
 - Correction: May 11 to Nov 9, 2026 holds 27 Mondays (the design said 26); 25 are trading days after Memorial Day and Labor Day. Window unchanged.
+
+## [2026-11-09] meta | money-monday-checks pre-registered
+- Caleb confirmed H1-H5, falsification criteria and stop rule. Plan status: pre-registered. Any later change is logged here as a deviation.
