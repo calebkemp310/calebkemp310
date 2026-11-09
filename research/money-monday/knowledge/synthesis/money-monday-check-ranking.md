@@ -3,7 +3,8 @@ title: "Which Money Monday check best predicts a bigger Monday move?"
 type: synthesis
 created: 2026-11-09
 updated: 2026-11-09
-status: review
+status: stable
+reviewed_by: caleb
 author: llm
 ---
 

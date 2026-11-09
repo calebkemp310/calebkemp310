@@ -98,3 +98,9 @@ author: llm
 - `knowledge/synthesis/money-monday-check-ranking.md` (status: review) -- Evidence base, results per hypothesis, check ranking, and "What stays open" sections per the plan's Task 8 spec
 - Linked from `knowledge/_meta/index.md` to clear the orphan-page lint check
 - `python scripts/lint-wiki.py` exits 0
+
+## [2026-11-09] meta | money-monday-checks Caleb reviewed and approved
+- Caleb reviewed `knowledge/synthesis/money-monday-check-ranking.md` and the findings artifact (https://claude.ai/artifact/4cbyAJT5CCava2ksfzndpi) and signed off
+- Synthesis page frontmatter updated: `status: stable`, `reviewed_by: caleb`
+- This clears the plan's final Verification item ("The synthesis page exists with status: stable after Caleb reviews it"). All other Verification items were already satisfied: lint-wiki.py exits 0; graded.csv covers 24/25 trading Mondays with the gap logged as a deviation; analyze.py reproduces results.json end to end; H1-H5 are each marked supported/rejected/insufficient.
+- **money-monday-checks project is complete.** The proposed screener diff in the findings artifact (require unusual_volume as one of the 3-of-4 passing checks) remains unapplied, pending a separate decision from Caleb on whether to update `money-monday-screener/index.html`.
