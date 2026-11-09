@@ -1,0 +1,7 @@
+---
+title: "Foreword"
+---
+
+# Foreword {.unnumbered}
+
+> [Insert foreword or acknowledgements here.]
