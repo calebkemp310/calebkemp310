@@ -1,0 +1,94 @@
+{
+  "task": "Task 7: Cross-checks",
+  "note": "Neither cross-check is a hypothesis test. Both are reported descriptively per the plan's own instruction to report them 'separately as a cherry-picked set'.",
+
+  "crosscheck_1_trading_journal": {
+    "source": "Notion Trading Journal, Trades database collection://2df10e8a-603c-49bb-aad5-3c7897250ceb",
+    "method": "Queried all rows, then filtered to trades dated on a Monday within the study window (2026-05-11 to 2026-11-09).",
+    "result": "NULL RESULT: zero usable rows.",
+    "detail": "11 rows returned total: 3 blank/placeholder rows, and 8 real logged trades (RCT, INO x2, DBGI, CENN x2, VSA, VIVK). Every one of the 8 real trades is dated 2026-11-06, which is a Friday, not a Monday. None fall inside the pre-registered Monday-only study window.",
+    "conclusion": "Caleb's journal has no Monday trades in the study window to grade against the four checks. This is reported as-is rather than papered over; it means cross-check 1 contributes no evidence either way on H1-H5."
+  },
+
+  "crosscheck_2_newsletter_runners": {
+    "source": "Tim Sykes newsletter email, 2026-10-24, naming 5 Monday runners with self-reported % moves",
+    "sample_size": 5,
+    "limitation_sample_size": "n=5 is far below the plan's 10-per-group insufficient-data threshold. No Mann-Whitney/Holm/regression test is run on this set; it is reported only as a cherry-picked table, per the plan's Task 7 instruction.",
+    "limitation_catalyst": "Catalyst was not blind-labeled for this set (no separate labeling subagent dispatch was run for 5 items). WORX/MI/SOAR show catalyst as 'not_labeled'. MNDR and GRML are reused directly from the main pipeline's graded.csv, where MNDR's catalyst was 'catalyst_excluded' (no pre-open news found) and GRML's catalyst was 'True'.",
+    "limitation_pct_mismatch": "The newsletter's self-reported % moves do not match this study's pre-registered outcome metric (max gain from the open = high/open - 1 on the daily bar). The newsletter figures are plausibly measured from a different, lower baseline (e.g. multi-day or close-to-close) and are NOT directly comparable to max_gain below. Both are shown so the mismatch is visible rather than silently reconciled.",
+    "rows": [
+      {
+        "date": "2026-10-19",
+        "ticker": "WORX",
+        "newsletter_claimed_pct": "+210%",
+        "max_gain_from_open": 1.7122302158273381,
+        "max_gain_pct": "171.2%",
+        "low_float": true,
+        "catalyst": "not_labeled",
+        "former_runner": false,
+        "unusual_volume": true,
+        "stale_float": true,
+        "volume_basis": "prior_session",
+        "data_source": "fresh pull for this cross-check (not in main universe.csv)"
+      },
+      {
+        "date": "2026-10-12",
+        "ticker": "MNDR",
+        "newsletter_claimed_pct": "+567%",
+        "max_gain_from_open": 1.1891891891891895,
+        "max_gain_pct": "118.9%",
+        "low_float": true,
+        "catalyst": "catalyst_excluded (no pre-open news found)",
+        "former_runner": false,
+        "unusual_volume": true,
+        "stale_float": true,
+        "volume_basis": "premarket",
+        "data_source": "reused from main pipeline features.csv/graded.csv (exact date match)"
+      },
+      {
+        "date": "2026-10-05",
+        "ticker": "MI",
+        "newsletter_claimed_pct": "+1,070%",
+        "max_gain_from_open": 2.4849498327759196,
+        "max_gain_pct": "248.5%",
+        "low_float": true,
+        "catalyst": "not_labeled",
+        "former_runner": false,
+        "unusual_volume": false,
+        "stale_float": true,
+        "volume_basis": "prior_session",
+        "data_source": "fresh pull for this cross-check; MI also appears in the main dataset on a different date (2026-06-08, max_gain=0.0295) which is NOT the newsletter's claimed date and is excluded from this row"
+      },
+      {
+        "date": "2026-09-28",
+        "ticker": "SOAR",
+        "newsletter_claimed_pct": "+170%",
+        "max_gain_from_open": 0.23600844772967267,
+        "max_gain_pct": "23.6%",
+        "low_float": true,
+        "catalyst": "not_labeled",
+        "former_runner": true,
+        "unusual_volume": false,
+        "stale_float": false,
+        "volume_basis": "prior_session",
+        "data_source": "fresh pull for this cross-check; SOAR also appears in the main dataset on two other dates (2026-08-10, 2026-09-14) which are NOT the newsletter's claimed date and are excluded from this row"
+      },
+      {
+        "date": "2026-09-21",
+        "ticker": "GRML",
+        "newsletter_claimed_pct": "+309%",
+        "max_gain_from_open": 0.5934515688949522,
+        "max_gain_pct": "59.3%",
+        "low_float": true,
+        "catalyst": true,
+        "former_runner": false,
+        "unusual_volume": true,
+        "stale_float": false,
+        "grade": "B",
+        "data_source": "reused from main pipeline features.csv/graded.csv (exact date match)"
+      }
+    ],
+    "descriptive_summary": "All 5 named runners pass low_float and stale_float is mixed (3 of 5 flagged stale). unusual_volume passes 3/5 (WORX, MNDR, GRML); former_runner passes only 1/5 (SOAR). Of the 2 rows with a labeled catalyst, GRML had one and MNDR did not (excluded). This small, cherry-picked set shows the same qualitative pattern as the main n=301 sample (unusual_volume and low_float are the most commonly-passing checks; former_runner is the rarest), but with n=5 and no catalyst label on 3/5 rows this is not evidence for or against any hypothesis -- consistent with, not independent confirmation of, the main finding.",
+    "conclusion": "Reported descriptively only, as the plan requires. No H1-H5 verdict is affected by this cross-check."
+  }
+}
