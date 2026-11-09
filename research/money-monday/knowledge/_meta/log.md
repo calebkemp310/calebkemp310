@@ -21,3 +21,9 @@ author: llm
 
 ## [2026-11-09] meta | money-monday-checks pre-registered
 - Caleb confirmed H1-H5, falsification criteria and stop rule. Plan status: pre-registered. Any later change is logged here as a deviation.
+
+## [2026-11-09] task | money-monday-checks Task 1 (feasibility probe)
+- Notes: `input/notes/data-availability.md`
+- Universe posts + daily bars available across the window; full article HTML parseable
+- Premarket M5 limited to the last 180 days (rolling): May 11 uses the pre-registered prior-session fallback; remaining Mondays must be pulled this week
+- Catalyst news for older Mondays not reliably reachable: handling of "no news found" needs a decision before Task 4
