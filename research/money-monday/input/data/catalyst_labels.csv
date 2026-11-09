@@ -1,0 +1,302 @@
+date,ticker,label,reason
+2026-05-11,BBOT,no,analyst coverage initiation only not a qualifying catalyst category
+2026-05-11,BW,yes,Q1 earnings beat with strong bookings/backlog growth
+2026-05-11,CLIK,excluded,no news found in window
+2026-05-11,DCOY,excluded,no news found in window
+2026-05-11,DGXX,no,at-the-market offering upsize, excluded category
+2026-05-11,DRTS,yes,positive interim brain tumor clinical trial data
+2026-05-11,EZGO,excluded,only appears in a movers roundup with no substantive news item
+2026-05-11,HPAI,excluded,only appears in a movers roundup with no substantive news item
+2026-05-11,HTCO,excluded,no news found in window
+2026-05-11,KIDZ,excluded,no news found in window
+2026-05-11,MNTS,excluded,no news found in window
+2026-05-11,VALN,excluded,no news found in window
+2026-05-11,XGN,excluded,no news found in window
+2026-05-11,ZYBT,excluded,no news found in window
+2026-05-18,AIIO,no,trade show exhibition appearance not a qualifying catalyst category
+2026-05-18,AIM,excluded,no news found in window
+2026-05-18,ATER,excluded,no news found in window
+2026-05-18,CHAI,excluded,no news found in window
+2026-05-18,CREG,excluded,no news found in window
+2026-05-18,GCTS,yes,Q1 earnings beat with 287% revenue growth and expanded licensing deal
+2026-05-18,GOVX,excluded,no news found in window
+2026-05-18,HCAI,excluded,no news found in window
+2026-05-18,HIVE,excluded,no news found in window
+2026-05-18,MNTS,excluded,no news found in window
+2026-05-18,NEPH,excluded,no news found in window
+2026-05-18,PMI,no,analyst coverage initiation only neutral rating
+2026-05-18,QUCY,yes,new defense subsidiary following exclusive IP license and supply deal
+2026-05-18,SBFM,no,public stock offering, excluded category
+2026-05-18,TE,no,stock rose on 13F stake disclosure not a qualifying catalyst category
+2026-05-18,VRAX,excluded,no news found in window
+2026-05-18,ZDAI,excluded,no news found in window
+2026-06-01,ABTS,excluded,no news found in window
+2026-06-01,AIM,yes,completed Phase 2 clinical trial enrollment ahead of schedule
+2026-06-01,CABR,yes,expanded multi-territory licensing/partnership agreement
+2026-06-01,CNXU,excluded,no news found in window
+2026-06-01,CXAI,excluded,no news found in window
+2026-06-01,GOVX,excluded,no news found in window
+2026-06-01,GTBP,no,internal AI productivity news not a qualifying catalyst category
+2026-06-01,HUBC,excluded,no news found in window
+2026-06-01,MASK,excluded,no news found in window
+2026-06-01,PURR,excluded,no news found in window
+2026-06-01,TGHL,excluded,no news found in window
+2026-06-08,CYPH,excluded,no news found in window
+2026-06-08,FOFO,excluded,no news found in window
+2026-06-08,GMHS,yes,Q3 earnings beat guidance with 40% net income growth
+2026-06-08,GPUS,no,rally explicitly attributed to broad market momentum not company-specific news
+2026-06-08,IPWR,excluded,no news found in window
+2026-06-08,MI,excluded,no news found in window
+2026-06-08,NCRA,yes,binding agreement to establish strategic venture platform
+2026-06-08,NRIX,yes,Roche partnership deal with $700M upfront and up to $2.3B milestones
+2026-06-08,NYXH,excluded,no news found in window
+2026-06-08,OCC,excluded,no news found in window
+2026-06-08,QTEX,yes,purchase order from Fortune 500 customer
+2026-06-08,RECT,excluded,no news found in window
+2026-06-08,SLND,excluded,no news found in window
+2026-06-08,SMTK,excluded,no news found in window
+2026-06-08,SUNE,excluded,no news found in window
+2026-06-08,TDIC,excluded,no news found in window
+2026-06-15,AHMA,excluded,no news found in window
+2026-06-15,CAST,yes,new DIRECTV commercial deal
+2026-06-15,CMTL,excluded,no news found in window
+2026-06-15,CTM,yes,won $250M US Navy IT services contract
+2026-06-15,CYPH,excluded,no news found in window
+2026-06-15,DXST,excluded,no news found in window
+2026-06-15,GELS,excluded,no news found in window
+2026-06-15,GLXG,excluded,no news found in window
+2026-06-15,GPUS,no,data center expansion interest but no signed deal, speculative
+2026-06-15,HTCO,excluded,no news found in window
+2026-06-15,HUBC,excluded,no news found in window
+2026-06-15,NIXX,yes,merger partner signed $2.34B AI data center MOU
+2026-06-15,QUCY,yes,exclusive IP license deal for quantum antenna drone tech
+2026-06-15,QXL,excluded,no news found in window
+2026-06-15,SLNH,excluded,no news found in window
+2026-06-15,SSII,excluded,no news found in window
+2026-06-15,TRIP,yes,$700M TheFork divestiture deal to American Express
+2026-06-22,ADTX,excluded,no news found in window
+2026-06-22,AZTR,excluded,no news found in window
+2026-06-22,CANG,excluded,no news found in window
+2026-06-22,CDT,no,private investment/financing subscription into subsidiary, financing-related excluded category
+2026-06-22,EHGO,excluded,no news found in window
+2026-06-22,GDC,excluded,no news found in window
+2026-06-22,GDEV,excluded,no news found in window
+2026-06-22,GIFT,excluded,no news found in window
+2026-06-22,NIXX,yes,finalized $156M/yr offtake agreement with Nidar Infrastructure
+2026-06-22,SAGT,yes,issued FY2026 guidance projecting 35% revenue growth
+2026-06-22,SSTK,excluded,no news found in window
+2026-06-22,TNON,excluded,no news found in window
+2026-06-22,VHUB,no,resale shelf registration filing, financing-related not a qualifying catalyst
+2026-06-29,AQMS,excluded,no news found in window
+2026-06-29,DCOY,excluded,only mentioned in movers roundup with no substantive news item
+2026-06-29,GWAV,excluded,no news found in window
+2026-06-29,INLF,excluded,no news found in window
+2026-06-29,MNTS,excluded,no news found in window
+2026-06-29,MVIS,yes,delivered lidar sensors to major AI hyperscaler for robotics evaluation
+2026-06-29,NNBR,excluded,no news found in window
+2026-06-29,POCI,excluded,no news found in window
+2026-06-29,REFR,excluded,no news found in window
+2026-06-29,SAGT,excluded,no news found in window
+2026-06-29,SOBR,excluded,no news found in window
+2026-06-29,SRFM,yes,expanded Palantir partnership to accelerate SurfOS products
+2026-06-29,TCRT,excluded,no news found in window
+2026-06-29,TNMG,excluded,no news found in window
+2026-06-29,TVGN,excluded,no news found in window
+2026-06-29,TVRD,excluded,no news found in window
+2026-06-29,UPC,yes,10.75M acquisition of Best Praise International
+2026-07-06,BGDE,yes,JV to acquire Texas site for AI data center campus conversion
+2026-07-06,ELAB,no,operational integration update with neutral sentiment not a new deal
+2026-07-06,FXHO,excluded,no news found in window
+2026-07-06,JLHL,excluded,no news found in window
+2026-07-06,LHSW,yes,announced AI-powered automotive painting robot supply agreements
+2026-07-06,LUCY,yes,Q2 sales up 71% YoY with new retail purchase orders
+2026-07-06,MSS,yes,divested two store operations for $4.5M strategic realignment deal
+2026-07-06,SEER,excluded,no news found in window
+2026-07-06,WXM,excluded,no news found in window
+2026-07-06,XXII,excluded,no news found in window
+2026-07-13,AGEN,no,private placement financing round, excluded offering category
+2026-07-13,BMGL,excluded,no news found in window
+2026-07-13,BRAI,yes,launched ARIA AI real estate workforce product and BillCentral partnership
+2026-07-13,EHGO,excluded,no news found in window
+2026-07-13,PLSM,no,Israeli regulatory sandbox selection not an FDA event or qualifying category
+2026-07-13,QTTB,yes,positive Phase 2a clinical trial topline results
+2026-07-13,QXL,excluded,no news found in window
+2026-07-13,SOBR,excluded,no news found in window
+2026-07-20,ADVB,excluded,no news found in window
+2026-07-20,BRIA,excluded,no news found in window
+2026-07-20,HCWB,excluded,no news found in window
+2026-07-20,VMAR,excluded,no news found in window
+2026-07-20,VSTD,excluded,no news found in window
+2026-07-27,BIYA,excluded,no news found in window
+2026-07-27,BTOC,excluded,no news found in window
+2026-07-27,DFNS,yes,fulfilled defense contract and acquired counter-drone stake though rally mainly driven by reverse split
+2026-07-27,FUSE,excluded,no news found in window
+2026-07-27,GMEX,yes,letter of intent to acquire AI social-intelligence platform
+2026-07-27,GOSS,yes,positive pre-NDA FDA meeting and reacquired drug rights from Chiesi
+2026-07-27,JXG,excluded,no news found in window
+2026-07-27,JZXN,excluded,no news found in window
+2026-07-27,KIDZ,no,buyback program increase announcement not a qualifying catalyst category
+2026-07-27,LGCL,excluded,no news found in window
+2026-07-27,MTNB,excluded,no news found in window
+2026-07-27,PN,excluded,no news found in window
+2026-07-27,SXTC,excluded,no news found in window
+2026-07-27,VEEE,excluded,no news found in window
+2026-08-03,CYCU,excluded,no news found in window
+2026-08-03,FCUV,yes,launched new Deterministic AI Forms Auto-Populate Engine product
+2026-08-03,HYFM,excluded,no news found in window
+2026-08-03,KIDZ,yes,MoU for AI data center colocation supporting prior GPU compute agreement
+2026-08-03,MGN,excluded,no news found in window
+2026-08-03,MNDR,excluded,no news found in window
+2026-08-03,NRXS,excluded,no news found in window
+2026-08-03,PUSA,excluded,no news found in window
+2026-08-03,UPC,excluded,no news found in window
+2026-08-03,YCBD,excluded,no news found in window
+2026-08-03,YYAI,excluded,no news found in window
+2026-08-10,ABCL,yes,positive Phase 2 menopause drug trial data
+2026-08-10,ACHR,yes,Q2 sales beat plus planned acquisitions of Wisk/Insitu/SkyGrid from Boeing
+2026-08-10,AIFA,excluded,no news found in window
+2026-08-10,AUUD,yes,SEC declared merger S-4 effective clearing path to closing
+2026-08-10,CXAI,excluded,no news found in window
+2026-08-10,EVGN,excluded,no news found in window
+2026-08-10,INLF,excluded,no news found in window
+2026-08-10,IPHA,yes,Sobi partnership deal with $75M upfront and FDA designations
+2026-08-10,JWEL,excluded,no news found in window
+2026-08-10,POWW,yes,Q1 earnings beat with 22% sales growth
+2026-08-10,SHMD,excluded,no news found in window
+2026-08-10,SLN,yes,positive Phase 2 trial results and Q2 earnings beat
+2026-08-10,SOAR,excluded,no news found in window
+2026-08-10,TH,yes,Q2 earnings beat and raised FY guidance
+2026-08-10,VREX,yes,1.1B acquisition deal by Teledyne
+2026-08-10,ZJYL,excluded,no news found in window
+2026-08-17,BESS,excluded,no news found in window
+2026-08-17,CRGO,no,guidance narrowed negative sentiment no positive catalyst
+2026-08-17,FIEE,excluded,no news found in window
+2026-08-17,GCTK,no,Nasdaq listing compliance continuation notice excluded category
+2026-08-17,HIVE,yes,subsidiary signed 5-year GPU cloud services contract with enterprise customer
+2026-08-17,IVF,yes,Q2 earnings beat with 17% YoY revenue growth
+2026-08-17,JLHL,excluded,no news found in window
+2026-08-17,NNNN,excluded,no news found in window
+2026-08-17,OABI,yes,Eli Lilly collaboration and license deal up to $370M milestones
+2026-08-17,OCUL,no,rose on competitor's trial results not own company-specific news
+2026-08-17,SLE,excluded,no news found in window
+2026-08-17,TRUG,excluded,no news found in window
+2026-08-17,UCL,no,buyback plan announcement not a qualifying catalyst category
+2026-08-17,WETO,excluded,no news found in window
+2026-08-17,XPON,excluded,no news found in window
+2026-08-24,BTCT,no,construction completion milestone not an operational launch, rally also tied to broad crypto momentum
+2026-08-24,CYPH,excluded,no news found in window
+2026-08-24,DXST,excluded,no news found in window
+2026-08-24,PMI,yes,Q2 revenue beat with 39% YoY growth
+2026-08-24,SDEV,excluded,no news found in window
+2026-08-24,UONE,excluded,no news found in window
+2026-08-24,ZJK,yes,secured large-volume purchase orders for AI infrastructure components
+2026-08-31,CVKD,yes,positive FDA Type D meeting feedback on Phase 3 protocol
+2026-08-31,MOVE,yes,data center capacity expansion deal with right of first refusal
+2026-08-31,RDHL,yes,divestiture deal to Apotex for $18M upfront plus milestones
+2026-08-31,SKYE,excluded,no news found in window
+2026-08-31,VVOS,excluded,no news found in window
+2026-08-31,XAIR,excluded,no news found in window
+2026-09-14,AKTX,excluded,no news found in window
+2026-09-14,ARMP,yes,FDA Breakthrough Therapy designation and positive clinical data
+2026-09-14,BMGL,excluded,no news found in window
+2026-09-14,BNC,excluded,no news found in window
+2026-09-14,BURU,yes,planned acquisition of Tekne SpA defense manufacturer
+2026-09-14,CRBP,yes,positive clinical data for obesity drug
+2026-09-14,LHSW,excluded,no news found in window
+2026-09-14,NCT,excluded,no news found in window
+2026-09-14,SCNI,excluded,no news found in window
+2026-09-14,SOAR,excluded,no news found in window
+2026-09-14,UZX,excluded,no news found in window
+2026-09-21,AIBZ,excluded,no news found in window
+2026-09-21,AVAT,excluded,no news found in window
+2026-09-21,BTTC,excluded,no news found in window
+2026-09-21,CYAB,excluded,no news found in window
+2026-09-21,DEFT,yes,launched new Valour Funds product line
+2026-09-21,DSC,excluded,no news found in window
+2026-09-21,GRML,yes,rare earth project expansion more than doubling footprint
+2026-09-21,IVVD,excluded,no news found in window
+2026-09-21,LABT,no,CEO shareholder letter not a qualifying catalyst category
+2026-09-21,MEDS,excluded,no news found in window
+2026-09-21,MX,yes,Navitas Semiconductor $5M investment deepening strategic partnership
+2026-09-21,NCPL,excluded,no news found in window
+2026-09-21,SCNI,no,Nasdaq compliance listing notice excluded category
+2026-09-21,STKE,excluded,no news found in window
+2026-09-21,SUIG,excluded,no news found in window
+2026-09-21,USDE,excluded,no news found in window
+2026-09-28,ACCL,excluded,no news found in window
+2026-09-28,AMPX,excluded,no news found in window
+2026-09-28,ARAY,yes,collaboration partnership with Samsung NeuroLogica
+2026-09-28,ATGL,excluded,no news found in window
+2026-09-28,CLAR,excluded,no news found in window
+2026-09-28,CLRO,excluded,no news found in window
+2026-09-28,CRMT,excluded,no news found in window
+2026-09-28,ELOX,excluded,no news found in window
+2026-09-28,GYGY,yes,full commercial availability launch of GameGolf KZN AI platform
+2026-09-28,LABT,yes,positive preclinical antimicrobial data for Nu-3
+2026-09-28,MEDS,yes,launched Health Lives Here app with Tollo Health and NFL Alumni partnership
+2026-09-28,MTEK,excluded,no news found in window
+2026-09-28,MX,excluded,no news found in window
+2026-09-28,ROC,no,analyst coverage initiation only not a qualifying catalyst category
+2026-09-28,TGHL,excluded,no news found in window
+2026-10-05,AIFA,excluded,no news found in window
+2026-10-05,ALEC,yes,exclusive global licensing deal with Genentech/Roche
+2026-10-05,APUS,yes,subsidiary signed two-year master services agreement for blockchain platform
+2026-10-05,BBD,excluded,no news found in window
+2026-10-05,CTNT,excluded,no news found in window
+2026-10-05,INTR,excluded,no news found in window
+2026-10-05,ITUB,excluded,no news found in window
+2026-10-05,JAGX,excluded,no news found in window
+2026-10-05,LITB,excluded,no news found in window
+2026-10-05,PAGS,excluded,no news found in window
+2026-10-05,QTEX,excluded,no news found in window
+2026-10-05,SDEV,excluded,no news found in window
+2026-10-05,STNE,excluded,no news found in window
+2026-10-05,UGP,excluded,no news found in window
+2026-10-12,CCC,yes,advanced acquisition talks with GTCR and Elliott Investment Management
+2026-10-12,CLWT,excluded,no news found in window
+2026-10-12,DAIC,excluded,no news found in window
+2026-10-12,EVAX,excluded,no news found in window
+2026-10-12,LNKS,excluded,no news found in window
+2026-10-12,MEDS,yes,Humana expanded Medicaid coverage for ChemoFx assay
+2026-10-12,MNDR,excluded,no news found in window
+2026-10-12,ONMD,excluded,no news found in window
+2026-10-12,SKYA,no,tender offer/buyback announcement not a qualifying catalyst category
+2026-10-12,YMAT,no,vague capital initiative for expansion with no specific named deal
+2026-10-19,AAME,excluded,no news found in window
+2026-10-19,AIBZ,excluded,no news found in window
+2026-10-19,AKTX,excluded,no news found in window
+2026-10-19,AMPGZ,excluded,no news found in window
+2026-10-19,DOMH,excluded,no news found in window
+2026-10-19,MASK,yes,signed power distribution connection agreement for AI compute center
+2026-10-19,MDBH,excluded,no news found in window
+2026-10-19,MEDS,excluded,no news found in window
+2026-10-19,RPGL,excluded,no news found in window
+2026-10-19,TCRT,excluded,no news found in window
+2026-10-19,UPLD,excluded,no news found in window
+2026-10-19,VRAX,excluded,no news found in window
+2026-10-19,XLAB,no,momentum driven trading not a specific company catalyst
+2026-10-26,DSS,excluded,no news found in window
+2026-10-26,GITS,excluded,no news found in window
+2026-10-26,IRIX,excluded,no news found in window
+2026-10-26,RGNT,excluded,no news found in window
+2026-10-26,SGRY,yes,5.7B take-private acquisition deal
+2026-10-26,SPRC,no,warrant repricing inducement agreement financing-related not qualifying
+2026-10-26,TGL,excluded,no news found in window
+2026-10-26,VBIO,no,preliminary unsolicited acquisition inquiries only, terms undisclosed
+2026-11-02,ANGO,excluded,no news found in window
+2026-11-02,BEEM,excluded,no news found in window
+2026-11-02,BLIN,excluded,no news found in window
+2026-11-02,BRAI,excluded,no news found in window
+2026-11-02,CALC,excluded,no news found in window
+2026-11-02,CLRO,excluded,only mentioned in movers roundup with no substantive news item
+2026-11-02,DARE,excluded,no news found in window
+2026-11-02,HCAI,excluded,no news found in window
+2026-11-02,HXHX,excluded,no news found in window
+2026-11-02,INLF,excluded,no news found in window
+2026-11-02,INO,yes,FDA accelerated approval for Voceryq
+2026-11-02,MODD,excluded,no news found in window
+2026-11-02,OBAI,excluded,no news found in window
+2026-11-02,RYDE,excluded,no news found in window
+2026-11-02,SCLX,excluded,no news found in window
+2026-09-28,ONCO,excluded,no news found in window
+2026-08-17,QNTM,excluded,no news found in window
