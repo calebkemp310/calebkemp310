@@ -8,14 +8,14 @@ No code here holds an API key or can place a real order.
 
 ## Paper trader
 
-Runs hourly on GitHub Actions (`.github/workflows/paper-trader.yml`). It trades
+Scheduled hourly on GitHub Actions (`.github/workflows/paper-trader.yml`); GitHub actually runs it about every 4 hours. It trades
 `vol_target_trend` (50-day trend filter, 30% vol target) on BTC-USD and ETH-USD
 with a virtual $10,000, using Coinbase public prices checked against Binance/Kraken.
 
 | You want to | Do this |
 |---|---|
 | See how it's doing | Open `report.md` on the `paper-trading` branch |
-| Get alerts | Watch the **Paper trading log** issue (trades, freezes, limit hits, kills, weekly summary). This needs Issues turned on in Settings → General → Features. Every alert is also kept in `alerts.md` on the `paper-trading` branch |
+| See alerts | Open `alerts.md` on the `paper-trading` branch (trades, freezes, limit hits, kills, weekly summary). The Sunday heartbeat check also pushes a summary to your phone. Phone alerts per event are off (repo Issues are disabled by choice) |
 | Stop everything now | Add a file named `KILL` in `trading-agent/` on `main` (GitHub app: Add file), or Actions → Paper trader → Run workflow → `kill` |
 | Start again after a kill | Delete the `KILL` file, then Actions → Paper trader → Run workflow → `rearm` |
 | Run a cycle now | Actions → Paper trader → Run workflow → `run` |
