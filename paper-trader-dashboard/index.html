@@ -238,7 +238,7 @@ footer a { color: var(--accent); }
   let nowOverride = null;
   const nowRaw = params.get("now");
   if (nowRaw !== null) {
-    const t = parseTs(nowRaw);
+    const t = parseTs(nowRaw.replace(/ (\d{2}:\d{2})$/, "+$1"));
     if (t === null) notices.push({ id: "now-notice", tone: "warn", text: "Ignored clock override “" + nowRaw.slice(0, 80) + "” (not an ISO timestamp); using the real clock." });
     else nowOverride = t;
   }
@@ -360,7 +360,7 @@ footer a { color: var(--accent); }
       if (!coin) return;
       out[coin] = { match: c[col("signal")], expected: c[col("expected")], actual: c[col("actual")], stops: c[col("stop")] };
     });
-    const upd = text.match(/_Updated ([^.]+?)\./);
+    const upd = text.match(/_Updated (\S+?)\.\s+Started/);
     return { rows: out, updated: upd ? parseTs(upd[1]) : null };
   }
 
@@ -387,9 +387,17 @@ footer a { color: var(--accent); }
     loading = false;
     btnR.disabled = false;
     show("loading", false);
-    const allFailed = FILES.every((k) => b.errors[k]);
-    if (isRefresh && data && allFailed) { refreshFailed = "Refresh failed, showing data from " + fmtTime(data.fetchedAt); }
-    else { refreshFailed = null; data = b; }
+    const failed = FILES.filter((k) => b.errors[k]);
+    if (isRefresh && data && failed.length) {
+      // Keep the last good copy of every file that failed this time.
+      if (b.errors.state && data.state) b.state = data.state;
+      if (b.errors.ledger && data.ledger) { b.ledger = data.ledger; b.skipped = data.skipped; }
+      if (b.errors.report && data.report) b.report = data.report;
+      if (b.errors.alerts && data.alerts) b.alerts = data.alerts;
+      refreshFailed = "Refresh failed for " + failed.map((k) => FILE_NAMES[k]).join(", ") + "; showing earlier data from " + fmtTime(data.fetchedAt) + ".";
+      if (failed.length === FILES.length) b.fetchedAt = data.fetchedAt;
+    } else refreshFailed = null;
+    data = b;
     render();
     document.body.dataset.ready = "1";
   }
@@ -461,7 +469,11 @@ footer a { color: var(--accent); }
     if (!s) { label = "? UNKNOWN"; tone = "muted"; }
     else if (!s.armed) { label = "■ DISARMED"; tone = "fail"; }
     else if (s.frozen) { label = "❄ FROZEN"; tone = "warn"; }
-    else { label = "● ARMED"; tone = "pass"; }
+    else {
+      const ok = parseTs(s.last_success);
+      const stale = ok === null || (now() - ok) / 3600000 > STALE_H;
+      label = stale ? "● ARMED · STALE" : "● ARMED"; tone = stale ? "warn" : "pass";
+    }
     pill.textContent = label; pill.className = "pill tone-" + tone;
 
     const hdr = document.getElementById("notices");
@@ -476,7 +488,7 @@ footer a { color: var(--accent); }
         hdr.append(el("div", { class: "notice tone-fail", "data-testid": "kill-reason" }, [el("strong", { text: "Disarmed: " }), reason + ". Re-arming is a manual step (workflow “rearm”)."]));
       }
       if (d.lastMark && d.lastMark.mode && d.lastMark.mode !== "ok" || d.lastMark && d.lastMark.block_entries) {
-        hdr.append(el("div", { class: "notice tone-warn", "data-testid": "mode-line" }, ["Risk engine: " + d.lastMark.mode + ((d.lastMark.reasons || []).length ? ", " + d.lastMark.reasons.join("; ") : "")]));
+        hdr.append(el("div", { class: "notice tone-warn", "data-testid": "mode-line" }, ["Risk engine: " + (d.lastMark.mode || (d.lastMark.block_entries ? "entries blocked" : "unknown")) + ((d.lastMark.reasons || []).length ? ", " + d.lastMark.reasons.join("; ") : "")]));
       }
     }
     document.getElementById("status-line").textContent = statusLine(b, d, lastOk);
@@ -707,7 +719,7 @@ footer a { color: var(--accent); }
       }
       const f = r.f;
       const amount = f.side === "buy" ? usd(f.notional) : usd(f.proceeds);
-      const isOpen = f.side === "buy" && d.s && d.s.positions && d.s.positions[f.product] && !rows.some((o) => o.e === f);
+      const isOpen = f.side === "buy" && !rows.some((o) => o.e === f);
       const pnlCell = f.side === "buy" ? (isOpen ? "open" : "closed") : usd(r.pnl) + " / " + usd(r.shp);
       return el("tr", {}, [
         el("td", { class: "mono", text: fmtTime(f._t) }), el("td", { text: f.product }), el("td", { text: f.side + " · " + f.kind }),
@@ -758,7 +770,8 @@ footer a { color: var(--accent); }
 
   let alertsAll = false;
   function severity(text) {
-    if (/^KILL|FROZEN|Heartbeat gap|REFUSED/i.test(text)) return ["critical", "fail"];
+    if (/^Unfrozen|^Re-armed/i.test(text)) return ["info", "info"];
+    if (/^KILL|\bFROZEN\b|Heartbeat gap|REFUSED/.test(text)) return ["critical", "fail"];
     if (/Order rejected|Daily loss|Data errors|passed without a run/i.test(text)) return ["warning", "warn"];
     if (/^PAPER (BUY|SELL)/.test(text)) return ["trade", "pass"];
     return ["info", "info"];
@@ -766,7 +779,7 @@ footer a { color: var(--accent); }
   function renderAlerts(b) {
     const box = document.getElementById("alerts");
     const g = b.alerts || [];
-    if (!g.length) { box.replaceChildren(el("div", { class: "empty", "data-testid": "alerts-empty" }, [b.errors.alerts ? "No alerts loaded (alerts.md: " + b.errors.alerts + ")." : "No alerts yet."])); return; }
+    if (!g.length) { box.replaceChildren(el("div", { class: "empty", "data-testid": "alerts-empty" }, ["No alerts yet."])); return; }
     const shown = alertsAll ? g : g.slice(0, 10);
     const kids = shown.map((grp) => el("div", { class: "alertgroup" }, [
       el("h3", { text: grp.t !== null ? fmtTime(grp.t) : grp.head }),
