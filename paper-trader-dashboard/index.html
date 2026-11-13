@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paper Trader Dashboard</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #17202c;
+  --muted: #5a6677;
+  --line: #d9dee6;
+  --accent: #0f6b78;        /* paper teal: simulation, not a live screen */
+  --accent-soft: #dcf0f2;
+  --pass: #17794a;
+  --pass-soft: #dff3e8;
+  --fail: #b3261e;
+  --fail-soft: #fbe3e1;
+  --warn: #8a5a00;
+  --warn-soft: #fbf0d2;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161d; --surface: #19202a; --ink: #e6eaf0; --muted: #98a3b3; --line: #2c3542;
+    --accent: #4fc3cf; --accent-soft: #15333a;
+    --pass: #4cc787; --pass-soft: #163325; --fail: #f2766d; --fail-soft: #3a1c1a;
+    --warn: #e6b450; --warn-soft: #362a12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161d; --surface: #19202a; --ink: #e6eaf0; --muted: #98a3b3; --line: #2c3542;
+  --accent: #4fc3cf; --accent-soft: #15333a;
+  --pass: #4cc787; --pass-soft: #163325; --fail: #f2766d; --fail-soft: #3a1c1a;
+  --warn: #e6b450; --warn-soft: #362a12;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+h1, h2 { font-family: var(--display); font-weight: 700; letter-spacing: .01em; margin: 0; line-height: 1.05; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 6vw, 2.8rem); }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1rem; margin: 0 0 6px; }
+.eyebrow { font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); font-weight: 600; }
+.muted { color: var(--muted); }
+.mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+section { margin-top: 32px; }
+.sechead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 12px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 820px) { .grid2 { grid-template-columns: minmax(0, 1fr); } .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .grid4 { grid-template-columns: minmax(0, 1fr); } }
+
+header .toprow { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button, select {
+  font: inherit; font-size: .9rem; min-height: 40px; padding: 6px 14px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+}
+button:hover:not(:disabled) { border-color: var(--accent); }
+button:disabled { opacity: .55; cursor: progress; }
+button:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.pillrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 14px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 700; font-size: 1.35rem; letter-spacing: .04em; padding: 4px 14px; border-radius: 999px; border: 2px solid currentColor; }
+.tone-pass { color: var(--pass); background: var(--pass-soft); }
+.tone-warn { color: var(--warn); background: var(--warn-soft); }
+.tone-fail { color: var(--fail); background: var(--fail-soft); }
+.tone-info { color: var(--accent); background: var(--accent-soft); }
+.tone-muted { color: var(--muted); background: transparent; }
+.badge { display: inline-block; font-family: var(--mono); font-size: .75rem; padding: 2px 8px; border-radius: 6px; border: 1px solid currentColor; }
+.statusline { margin-top: 10px; font-size: 1.05rem; }
+.notice { margin-top: 12px; padding: 10px 14px; border-radius: 8px; border-left: 4px solid currentColor; }
+.notice strong { font-weight: 700; }
+.hidden { display: none !important; }
+
+.cell .k { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.cell .v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 1rem; margin-top: 2px; overflow-wrap: anywhere; }
+.cell .s { font-size: .85rem; color: var(--muted); overflow-wrap: anywhere; }
+.big { font-family: var(--display); font-weight: 700; font-size: 2.4rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin-top: 12px; font-size: .92rem; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; overflow-wrap: anywhere; }
+.pos { color: var(--pass); } .neg { color: var(--fail); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.tablebox { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+th { font-family: var(--mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; background: var(--bg); }
+td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+tr.mutedrow td { color: var(--muted); font-style: italic; }
+.empty { padding: 18px; color: var(--muted); text-align: center; }
+
+.chartbox { position: relative; }
+.chartbox svg { width: 100%; height: 260px; display: block; touch-action: pan-y; }
+.chartbox .axis text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .85rem; color: var(--muted); margin-top: 8px; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 6px; }
+.readout { position: absolute; top: 8px; left: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-family: var(--mono); font-size: .8rem; pointer-events: none; max-width: calc(100% - 16px); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; min-height: 36px; padding: 4px 12px; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+
+.alertgroup { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.alertgroup:last-child { border-bottom: 0; }
+.alertgroup h3 { font-family: var(--mono); font-size: .8rem; color: var(--muted); font-weight: 600; }
+.alertgroup ul { margin: 6px 0 0; padding: 0; list-style: none; }
+.alertgroup li { display: flex; gap: 10px; align-items: baseline; padding: 3px 0; overflow-wrap: anywhere; }
+.alertgroup li .badge { flex: none; }
+
+.skeleton { background: linear-gradient(90deg, var(--line) 25%, var(--bg) 50%, var(--line) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 8px; height: 90px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } * { transition: none !important; } }
+footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
+footer a { color: var(--accent); }
+@media (max-width: 600px) { .big { font-size: 2rem; } h2 { font-size: 1.3rem; } th, td { padding: 8px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="toprow">
+    <div>
+      <div class="eyebrow">Paper trading · vol_target_trend</div>
+      <h1>Paper Trader Dashboard</h1>
+    </div>
+    <div class="controls">
+      <button type="button" data-testid="refresh" id="refresh">Refresh</button>
+      <label class="muted" style="font-size:.85rem">Theme
+        <select data-testid="theme-toggle" id="theme" aria-label="Color theme">
+          <option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="pillrow">
+    <span class="pill tone-muted" data-testid="status-pill" id="pill" role="status">… LOADING</span>
+    <span class="badge tone-info hidden" data-testid="source-badge" id="source-badge"></span>
+    <span class="badge tone-warn hidden" data-testid="now-badge" id="now-badge"></span>
+    <span class="muted mono" style="font-size:.82rem" data-testid="updated-at" id="updated-at"></span>
+  </div>
+  <p class="statusline" data-testid="status-line" id="status-line" aria-live="polite"></p>
+  <div id="notices"></div>
+  <div class="notice tone-info" data-testid="loading" id="loading" role="status" aria-live="polite">Loading paper trader data…</div>
+</header>
+
+<main id="main">
+  <section aria-labelledby="h-health">
+    <div class="sechead"><h2 id="h-health">Health</h2><span class="muted" style="font-size:.85rem" id="phase-day"></span></div>
+    <div class="grid4" id="health"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+  </section>
+
+  <section aria-labelledby="h-equity">
+    <div class="sechead"><h2 id="h-equity">Equity</h2><span class="muted mono" style="font-size:.82rem" id="marked-at"></span></div>
+    <div class="grid2" id="equity"><div class="skeleton"></div><div class="skeleton"></div></div>
+  </section>
+
+  <section aria-labelledby="h-pos">
+    <div class="sechead"><h2 id="h-pos">Positions</h2></div>
+    <div data-testid="positions" id="positions"><div class="skeleton"></div></div>
+  </section>
+
+  <section aria-labelledby="h-sig">
+    <div class="sechead"><h2 id="h-sig">Current signal</h2><span class="muted" style="font-size:.85rem">Latest daily decision per coin · informational</span></div>
+    <div class="cards" id="signals"><div class="skeleton"></div><div class="skeleton"></div></div>
+  </section>
+
+  <section aria-labelledby="h-curve">
+    <div class="sechead">
+      <h2 id="h-curve">Equity curve</h2>
+      <div class="seg" role="group" aria-label="Chart range">
+        <button type="button" data-testid="range-7d" data-range="7">7D</button>
+        <button type="button" data-testid="range-30d" data-range="30">30D</button>
+        <button type="button" data-testid="range-all" data-range="0" aria-pressed="true">All</button>
+      </div>
+    </div>
+    <div class="panel" data-testid="curve" id="curve"><div class="skeleton" style="height:240px"></div></div>
+  </section>
+
+  <section aria-labelledby="h-hist">
+    <div class="sechead"><h2 id="h-hist">Trade history</h2><span class="muted" style="font-size:.85rem">Newest first · simulated fills</span></div>
+    <div data-testid="history" id="history"><div class="skeleton"></div></div>
+  </section>
+
+  <section aria-labelledby="h-track">
+    <div class="sechead"><h2 id="h-track">Tracking vs backtest</h2><span class="muted" style="font-size:.85rem">Paper-phase pass checks (DESIGN.md §9)</span></div>
+    <div data-testid="tracking" id="tracking"><div class="skeleton"></div></div>
+    <div class="panel" style="margin-top:12px" data-testid="reliability" id="reliability"></div>
+  </section>
+
+  <section aria-labelledby="h-alerts">
+    <div class="sechead"><h2 id="h-alerts">Alerts</h2><span class="muted" style="font-size:.85rem">From alerts.md, newest first</span></div>
+    <div class="panel" data-testid="alerts" id="alerts"><div class="skeleton"></div></div>
+  </section>
+</main>
+
+<footer>
+  <p><strong>Read-only view of a paper (simulated) account. Nothing here places or suggests orders.</strong></p>
+  <p>Data: <a href="https://github.com/calebkemp310/calebkemp310/tree/paper-trading" rel="noopener">paper-trading branch</a> · state.json, ledger.jsonl, report.md, alerts.md. <span class="mono" id="checksum"></span></p>
+</footer>
+</div>
+
+<script>
+"use strict";
+(function () {
+  const LIVE_BASE = "https://raw.githubusercontent.com/calebkemp310/calebkemp310/paper-trading/";
+  const FILES = ["state", "ledger", "report", "alerts"];
+  const FILE_NAMES = { state: "state.json", ledger: "ledger.jsonl", report: "report.md", alerts: "alerts.md" };
+  const TIMEOUT_MS = 15000;
+  const STALE_H = 26;
+  const START_EQUITY_DEFAULT = 10000;
+  const LIMITS = { sleeve: 0.25, total: 0.5, dailyBlock: -0.03, ddKill: -0.25, consec: 3, day: 5, feedGap: 0.01, medGap: 0.003, worstGap: 0.01, phaseDays: 90 };
+  const KNOWN_TYPES = new Set(["mark", "decision", "fill", "order", "crosscheck", "error", "freeze", "kill", "stop", "skip"]);
+  const DASH = "–";
+
+  // ---------- source + clock ----------
+  const params = new URLSearchParams(location.search);
+  let base = LIVE_BASE, fixture = null;
+  const notices = [];
+  const srcRaw = params.get("src");
+  if (srcRaw !== null) {
+    if (/^fixtures\/[a-z0-9-]+\/$/.test(srcRaw)) { base = srcRaw; fixture = srcRaw.split("/")[1]; }
+    else notices.push({ id: "src-notice", tone: "warn", text: "Ignored data source “" + srcRaw.slice(0, 80) + "”. Only fixtures/<name>/ is allowed; showing live data." });
+  }
+  let nowOverride = null;
+  const nowRaw = params.get("now");
+  if (nowRaw !== null) {
+    const t = parseTs(nowRaw);
+    if (t === null) notices.push({ id: "now-notice", tone: "warn", text: "Ignored clock override “" + nowRaw.slice(0, 80) + "” (not an ISO timestamp); using the real clock." });
+    else nowOverride = t;
+  }
+  const now = () => (nowOverride !== null ? nowOverride : Date.now());
+
+  // ---------- helpers ----------
+  function parseTs(s) {
+    if (typeof s !== "string" || !s) return null;
+    let x = s.trim();
+    let m = x.match(/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) UTC$/);
+    if (m) x = m[1] + "T" + m[2] + ":00Z";
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/.test(x)) return null;
+    x = x.replace(/(\.\d{3})\d+/, "$1").replace(/\+00:00$/, "Z");
+    const t = Date.parse(x);
+    return Number.isFinite(t) ? t : null;
+  }
+  const isNum = (v) => typeof v === "number" && Number.isFinite(v);
+  function el(tag, attrs, kids) {
+    const n = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      const v = attrs[k];
+      if (v === null || v === undefined || v === false) continue;
+      if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v === true ? "" : String(v));
+    }
+    (kids || []).forEach((c) => { if (c !== null && c !== undefined && c !== false) n.append(typeof c === "string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+  const svgEl = (tag, attrs) => { const n = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const k in attrs) n.setAttribute(k, String(attrs[k])); return n; };
+  function usd(v) { return isNum(v) ? (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : DASH; }
+  function px(v) { return isNum(v) ? "$" + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : DASH; }
+  function pct(frac, signed) {
+    if (!isNum(frac)) return DASH;
+    const s = (frac * 100).toFixed(2);
+    if (s === "0.00" || s === "-0.00") return "0.00%";
+    return (signed !== false && frac > 0 ? "+" : "") + s + "%";
+  }
+  const pct1 = (frac) => (isNum(frac) ? (frac * 100).toFixed(1) + "%" : DASH);
+  const qty = (v) => (isNum(v) ? v.toFixed(6) : DASH);
+  const toneOf = (v) => (!isNum(v) || Math.abs(v) < 5e-5 ? "" : v > 0 ? "pos" : "neg");
+  function fmtTime(t) {
+    if (t === null) return DASH;
+    const d = new Date(t);
+    const p = (n) => String(n).padStart(2, "0");
+    return d.getUTCFullYear() + "-" + p(d.getUTCMonth() + 1) + "-" + p(d.getUTCDate()) + " " + p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + " UTC";
+  }
+  function ago(t) {
+    if (t === null) return DASH;
+    const ms = now() - t;
+    if (ms < 60000) return "just now";
+    const m = Math.floor(ms / 60000), d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), mm = m % 60;
+    if (d >= 2) return d + "d " + h + "h ago";
+    const hh = Math.floor(m / 60);
+    return hh ? hh + "h " + mm + "m ago" : mm + "m ago";
+  }
+
+  // ---------- fetch ----------
+  function fetchFile(key) {
+    const url = base + FILE_NAMES[key] + "?t=" + Date.now();
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), TIMEOUT_MS);
+    return fetch(url, { cache: "no-store", signal: ctl.signal })
+      .then((r) => { if (!r.ok) throw { reason: "HTTP " + r.status }; return r.text(); })
+      .then((text) => ({ ok: true, text }))
+      .catch((e) => {
+        let reason = e && e.reason;
+        if (!reason) reason = !navigator.onLine ? "offline" : e && e.name === "AbortError" ? "timed out after 15s" : "network error";
+        return { ok: false, reason };
+      })
+      .finally(() => clearTimeout(timer));
+  }
+
+  function parseState(text) {
+    let s;
+    try { s = JSON.parse(text); } catch (e) { return { ok: false, reason: "invalid JSON" }; }
+    if (!s || typeof s !== "object" || Array.isArray(s) || typeof s.armed !== "boolean") return { ok: false, reason: "unexpected format" };
+    return { ok: true, value: s };
+  }
+  function parseLedger(text) {
+    const recs = []; let skipped = 0;
+    const lines = text.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      let r;
+      try { r = JSON.parse(line); } catch (e) { skipped++; continue; }
+      if (!r || typeof r !== "object" || !KNOWN_TYPES.has(r.type)) { skipped++; continue; }
+      const t = parseTs(r.ts);
+      if (t === null) { skipped++; continue; }
+      if (r.type === "mark" && !isNum(r.equity)) { skipped++; continue; }
+      r._t = t; r._i = i;
+      recs.push(r);
+    }
+    recs.sort((a, b) => a._t - b._t || a._i - b._i);
+    return { recs, skipped };
+  }
+  function parseAlerts(text) {
+    const groups = []; let cur = null;
+    text.split("\n").forEach((raw, i) => {
+      const line = raw.trim();
+      const h = line.match(/^##\s+(.+)$/);
+      if (h) { cur = { head: h[1].trim(), t: parseTs(h[1].trim()), items: [], i }; groups.push(cur); return; }
+      const it = line.match(/^-\s+(.+)$/);
+      if (it && cur) cur.items.push(it[1]);
+    });
+    return groups.filter((g) => g.items.length).sort((a, b) => (b.t || 0) - (a.t || 0) || b.i - a.i);
+  }
+  function parseReportTracking(text) {
+    const idx = text.indexOf("## Tracking");
+    if (idx < 0) return null;
+    const rows = text.slice(idx).split("\n").filter((l) => l.trim().startsWith("|"));
+    if (rows.length < 2) return null;
+    const cells = (l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim().replace(/\*\*/g, ""));
+    const head = cells(rows[0]).map((h) => h.toLowerCase());
+    const col = (name) => head.findIndex((h) => h.includes(name));
+    const out = {};
+    rows.slice(2).forEach((r) => {
+      const c = cells(r);
+      const coin = c[col("coin")];
+      if (!coin) return;
+      out[coin] = { match: c[col("signal")], expected: c[col("expected")], actual: c[col("actual")], stops: c[col("stop")] };
+    });
+    const upd = text.match(/_Updated ([^.]+?)\./);
+    return { rows: out, updated: upd ? parseTs(upd[1]) : null };
+  }
+
+  // ---------- state ----------
+  let data = null;         // last good parsed bundle
+  let loading = false;
+  let range = 0;
+  let autoTimer = null;
+
+  async function load(isRefresh) {
+    if (loading) return;
+    loading = true;
+    document.body.removeAttribute("data-ready");
+    const btnR = document.getElementById("refresh"); btnR.disabled = true;
+    const retry = document.querySelector('[data-testid="retry"]'); if (retry) retry.disabled = true;
+    if (!isRefresh) show("loading", true);
+    const results = await Promise.all(FILES.map(fetchFile));
+    const b = { errors: {}, fetchedAt: Date.now() };
+    FILES.forEach((k, i) => { if (!results[i].ok) b.errors[k] = results[i].reason; });
+    if (results[0].ok) { const s = parseState(results[0].text); if (s.ok) b.state = s.value; else b.errors.state = s.reason; }
+    if (results[1].ok) { const l = parseLedger(results[1].text); b.ledger = l.recs; b.skipped = l.skipped; }
+    if (results[2].ok) b.report = parseReportTracking(results[2].text) || { rows: null, updated: null };
+    if (results[3].ok) b.alerts = parseAlerts(results[3].text);
+    loading = false;
+    btnR.disabled = false;
+    show("loading", false);
+    const allFailed = FILES.every((k) => b.errors[k]);
+    if (isRefresh && data && allFailed) { refreshFailed = "Refresh failed, showing data from " + fmtTime(data.fetchedAt); }
+    else { refreshFailed = null; data = b; }
+    render();
+    document.body.dataset.ready = "1";
+  }
+  let refreshFailed = null;
+
+  function show(id, on) { const n = document.getElementById(id); if (n) n.classList.toggle("hidden", !on); }
+  function replace(id, ...kids) { const n = document.getElementById(id); n.replaceChildren(...kids.filter(Boolean)); return n; }
+
+  // ---------- derived ----------
+  function derive(b) {
+    const L = b.ledger || [];
+    const marks = L.filter((r) => r.type === "mark");
+    const lastMark = marks[marks.length - 1] || null;
+    const latest = (type, product) => { for (let i = L.length - 1; i >= 0; i--) if (L[i].type === type && (!product || L[i].product === product)) return L[i]; return null; };
+    const s = b.state || null;
+    const products = Array.from(new Set([].concat(
+      L.filter((r) => r.product).map((r) => r.product),
+      s ? Object.keys(s.positions || {}) : [],
+      s && s.last_processed_bar && typeof s.last_processed_bar === "object" ? Object.keys(s.last_processed_bar) : []
+    ))).sort();
+    if (!products.length) products.push("BTC-USD", "ETH-USD");
+    return { L, marks, lastMark, latest, s, products };
+  }
+
+  // ---------- render ----------
+  function render() {
+    const b = data;
+    const d = derive(b);
+    renderNotices(b);
+    renderHeader(b, d);
+    renderHealth(b, d);
+    renderEquity(b, d);
+    renderPositions(b, d);
+    renderSignals(b, d);
+    renderCurve(b, d);
+    renderHistory(b, d);
+    renderTracking(b, d);
+    renderAlerts(b);
+    document.getElementById("updated-at").textContent = "Updated " + fmtTime(b.fetchedAt).slice(11);
+    document.getElementById("checksum").textContent = d.s && typeof d.s.checksum === "string" ? "state checksum " + d.s.checksum.slice(0, 8) : "";
+  }
+
+  function renderNotices(b) {
+    const box = document.getElementById("notices");
+    const kids = [];
+    if (fixture) { const sb = document.getElementById("source-badge"); sb.textContent = "Fixture: " + fixture; sb.classList.remove("hidden"); }
+    if (nowOverride !== null) { const nb = document.getElementById("now-badge"); nb.textContent = "Clock: " + fmtTime(nowOverride); nb.classList.remove("hidden"); }
+    notices.forEach((n) => kids.push(el("div", { class: "notice tone-" + n.tone, "data-testid": n.id }, [n.text])));
+    if (!navigator.onLine) kids.push(el("div", { class: "notice tone-warn", "data-testid": "offline" }, ["You are offline. The trader may be fine; this page just can't reach the data."]));
+    if (refreshFailed) kids.push(el("div", { class: "notice tone-warn", "data-testid": "refresh-failed" }, [refreshFailed]));
+    const errKeys = FILES.filter((k) => b.errors[k]);
+    if (errKeys.length) {
+      const list = el("ul", { style: "margin:6px 0 0;padding-left:20px" }, errKeys.map((k) =>
+        el("li", { "data-testid": "file-error-" + k }, [FILE_NAMES[k] + " could not be loaded (" + b.errors[k] + ")"])));
+      const btn = el("button", { type: "button", "data-testid": "retry", style: "margin-top:8px" }, ["Retry"]);
+      btn.addEventListener("click", () => load(false));
+      const allFail = errKeys.length === FILES.length;
+      kids.push(el("div", { class: "notice tone-" + (allFail ? "fail" : "warn"), "data-testid": allFail ? "total-failure" : "file-errors", role: "alert" },
+        [el("strong", { text: allFail ? "No data could be loaded." : "Some data is missing." }), list, btn]));
+    }
+    if (b.skipped) kids.push(el("div", { class: "notice tone-warn", "data-testid": "ledger-skipped" }, [b.skipped + " ledger line" + (b.skipped === 1 ? "" : "s") + " could not be read and were skipped."]));
+    box.replaceChildren(...kids);
+  }
+
+  function renderHeader(b, d) {
+    const pill = document.getElementById("pill");
+    const s = d.s;
+    let label, tone;
+    if (!s) { label = "? UNKNOWN"; tone = "muted"; }
+    else if (!s.armed) { label = "■ DISARMED"; tone = "fail"; }
+    else if (s.frozen) { label = "❄ FROZEN"; tone = "warn"; }
+    else { label = "● ARMED"; tone = "pass"; }
+    pill.textContent = label; pill.className = "pill tone-" + tone;
+
+    const hdr = document.getElementById("notices");
+    const lastOk = s ? parseTs(s.last_success) : null;
+    if (s) {
+      const ageH = lastOk === null ? Infinity : (now() - lastOk) / 3600000;
+      if (ageH > STALE_H) hdr.append(el("div", { class: "notice tone-fail", "data-testid": "stale-banner", role: "alert" },
+        [lastOk === null ? "Stale: no successful run recorded yet (limit 26h)." : "Stale: last successful run was " + ago(lastOk).replace(" ago", "") + " ago (limit 26h). Check the Paper trader workflow on GitHub."]));
+      if (!s.armed) {
+        const k = d.latest("kill");
+        const reason = s.kill_reason || (k && (k.reasons || []).join("; ")) || "no reason recorded";
+        hdr.append(el("div", { class: "notice tone-fail", "data-testid": "kill-reason" }, [el("strong", { text: "Disarmed: " }), reason + ". Re-arming is a manual step (workflow “rearm”)."]));
+      }
+      if (d.lastMark && d.lastMark.mode && d.lastMark.mode !== "ok" || d.lastMark && d.lastMark.block_entries) {
+        hdr.append(el("div", { class: "notice tone-warn", "data-testid": "mode-line" }, ["Risk engine: " + d.lastMark.mode + ((d.lastMark.reasons || []).length ? ", " + d.lastMark.reasons.join("; ") : "")]));
+      }
+    }
+    document.getElementById("status-line").textContent = statusLine(b, d, lastOk);
+  }
+
+  function statusLine(b, d, lastOk) {
+    const s = d.s;
+    if (!s) return "Account status unknown: state.json could not be loaded.";
+    const parts = [];
+    const stale = lastOk === null || (now() - lastOk) / 3600000 > STALE_H;
+    if (!s.armed) parts.push("Disarmed.");
+    else if (s.frozen) parts.push("Frozen: no orders until data checks pass.");
+    else parts.push(stale ? "Armed, but the last run is stale." : "Armed and healthy.");
+    const held = Object.keys(s.positions || {});
+    if (held.length) parts.push("Holding " + held.join(" and ") + ".");
+    else {
+      const sig = d.products.map((p) => { const x = d.latest("decision", p); return x && isNum(x.close) && isNum(x.sma) ? p.split("-")[0] + " is " + Math.abs((x.close / x.sma - 1) * 100).toFixed(1) + "% " + (x.close >= x.sma ? "above" : "below") : null; }).filter(Boolean);
+      parts.push("Flat in cash" + (sig.length ? "; " + sig.join(" and ") + " its 50-day average." : "."));
+    }
+    if (lastOk !== null) parts.push("Last run " + ago(lastOk) + ".");
+    return parts.join(" ");
+  }
+
+  function cell(k, v, sub, attrs) { return el("div", Object.assign({ class: "panel cell" }, attrs || {}), [el("div", { class: "k", text: k }), el("div", { class: "v" }, [v]), sub ? el("div", { class: "s" }, [sub]) : null]); }
+
+  function renderHealth(b, d) {
+    const s = d.s;
+    if (!s) { replace("health", el("div", { class: "panel empty", style: "grid-column:1/-1" }, ["Health unavailable: state.json could not be loaded."])); document.getElementById("phase-day").textContent = ""; return; }
+    const lastOk = parseTs(s.last_success), lastRun = parseTs(s.last_run);
+    const started = parseTs(s.started);
+    const day = started === null ? null : Math.floor((now() - started) / 86400000) + 1;
+    document.getElementById("phase-day").textContent = day === null ? "" : "Day " + Math.max(1, day) + " of " + LIMITS.phaseDays;
+    document.getElementById("phase-day").setAttribute("data-testid", "phase-day");
+    const errs = s.errors || {};
+    const recent = (errs.recent || []).filter((t) => { const x = parseTs(t); return x !== null && now() - x < 86400000; }).length;
+    const cons = isNum(errs.consecutive) ? errs.consecutive : 0;
+    const gaps = d.products.map((p) => { const c = d.latest("crosscheck", p); return p.split("-")[0] + " " + (c && isNum(c.gap) ? pct(c.gap) : DASH); }).join(" · ");
+    const lastX = d.L.filter((r) => r.type === "crosscheck").pop();
+    replace("health",
+      cell("Last successful run", el("span", { "data-testid": "last-success", text: fmtTime(lastOk) }), ago(lastOk) + (lastRun !== null && s.last_run !== s.last_success ? " · last attempt " + ago(lastRun) : "")),
+      cell("Data errors", (cons + " / " + LIMITS.consec + " in a row"), recent + " / " + LIMITS.day + " in 24h", { "data-testid": "error-budget" }),
+      cell("Feed agreement", gaps, "Coinbase vs secondary · limit 1%" + (lastX ? " · as of " + fmtTime(lastX._t) : ""), { "data-testid": "crosscheck" }),
+      cell("Paper phase", day === null ? DASH : "Day " + Math.max(1, day) + " of " + LIMITS.phaseDays, "started " + fmtTime(started))
+    );
+  }
+
+  function equityFallback(s) {
+    let eq = s.cash || 0; Object.values(s.positions || {}).forEach((p) => { eq += (p.qty || 0) * (p.entry_px || 0); });
+    let sh = (s.shadow && s.shadow.cash) || 0; Object.values((s.shadow && s.shadow.positions) || {}).forEach((p) => { sh += (p.qty || 0) * (p.entry_px || 0); });
+    return { eq, sh };
+  }
+
+  function renderEquity(b, d) {
+    const s = d.s;
+    if (!s) { replace("equity", el("div", { class: "panel empty", style: "grid-column:1/-1" }, ["Equity unavailable: state.json could not be loaded."])); document.getElementById("marked-at").textContent = ""; return; }
+    const start = isNum(s.start_equity) ? s.start_equity : START_EQUITY_DEFAULT;
+    const m = d.lastMark;
+    const fb = equityFallback(s);
+    const eq = m ? m.equity : fb.eq;
+    const sh = m && isNum(m.shadow_equity) ? m.shadow_equity : fb.sh;
+    const peak = isNum(s.peak_equity) ? Math.max(s.peak_equity, eq) : eq;
+    const shPeak = Math.max(sh, ...d.marks.filter((x) => isNum(x.shadow_equity)).map((x) => x.shadow_equity));
+    const today = isNum(s.day_start_equity) && s.day_start_equity > 0 ? eq / s.day_start_equity - 1 : null;
+    document.getElementById("marked-at").textContent = m ? "marked " + fmtTime(m._t) : "unmarked (cash + positions at entry)";
+    const held = Object.entries(s.positions || {});
+    const prices = (m && m.prices) || {};
+    const exposure = held.reduce((a, [p, v]) => a + (v.qty || 0) * (isNum(prices[p]) ? prices[p] : v.entry_px || 0), 0);
+    const card = (title, val, chg, dd, ddId, valId, extra) => el("div", { class: "panel", "data-testid": valId }, [
+      el("div", { class: "eyebrow", text: title }),
+      el("div", { class: "big", style: "margin-top:6px" }, [usd(val)]),
+      el("div", { class: "mono " + toneOf(chg), style: "margin-top:4px" }, [pct(chg) + " vs " + usd(start) + " start"]),
+      m ? null : el("div", { class: "badge tone-warn", style: "margin-top:6px" }, ["unmarked"]),
+      el("dl", { class: "kv" }, [el("dt", { text: "Drawdown from peak" }), el("dd", { "data-testid": ddId, class: toneOf(dd) }, [pct(dd)])].concat(extra || []))
+    ]);
+    replace("equity",
+      card("Maker book (record)", eq, eq / start - 1, peak > 0 ? eq / peak - 1 : null, "dd-maker", "equity-maker", [
+        el("dt", { text: "Today vs 00:00 UTC" }), el("dd", { "data-testid": "today-change", class: toneOf(today) }, [pct(today) + " (block at -3%)"]),
+        el("dt", { text: "Cash" }), el("dd", { text: usd(s.cash) }),
+        el("dt", { text: "Invested" }), el("dd", { text: pct(eq > 0 ? exposure / eq : null, false) + " (cap 50%)" })
+      ]),
+      card("Taker shadow (pessimistic)", sh, sh / start - 1, shPeak > 0 ? sh / shPeak - 1 : null, "dd-shadow", "equity-shadow", [
+        el("dt", { text: "Gap vs maker" }), el("dd", { text: pct(eq > 0 ? sh / eq - 1 : null) }),
+        el("dt", { text: "Kill switch at" }), el("dd", { text: "-25% from peak" })
+      ])
+    );
+  }
+
+  function renderPositions(b, d) {
+    const s = d.s;
+    if (!s) return replace("positions", el("div", { class: "panel empty" }, ["Positions unavailable: state.json could not be loaded."]));
+    const held = Object.entries(s.positions || {});
+    const prices = (d.lastMark && d.lastMark.prices) || {};
+    if (!held.length) {
+      const cashTxt = usd(s.cash);
+      return replace("positions", el("div", { class: "panel", "data-testid": "flat-message" }, [
+        el("strong", { text: "Flat: holding " + cashTxt + " cash" + (s.shadow ? " in both books." : ".") }),
+        el("div", { class: "muted", style: "margin-top:4px" }, ["The strategy only holds a coin while it closes above its 50-day average. Being flat is expected behaviour, not a fault."])
+      ]));
+    }
+    const cards = held.map(([p, v]) => {
+      const mark = isNum(prices[p]) ? prices[p] : null;
+      const pnl = mark !== null && isNum(v.entry_px) ? mark / v.entry_px - 1 : null;
+      const toStop = mark !== null && isNum(v.stop) ? v.stop / mark - 1 : null;
+      const near = toStop !== null && toStop > -0.05;
+      const shq = s.shadow && s.shadow.positions && s.shadow.positions[p] ? s.shadow.positions[p].qty : null;
+      return el("div", { class: "panel", "data-testid": "position-" + p }, [
+        el("div", { class: "sechead", style: "margin:0" }, [el("h3", { text: p }), el("span", { class: "mono " + toneOf(pnl), text: pct(pnl) })]),
+        el("dl", { class: "kv" }, [
+          el("dt", { text: "Quantity" }), el("dd", { text: qty(v.qty) }),
+          el("dt", { text: "Entry" }), el("dd", { text: px(v.entry_px) + " · " + fmtTime(parseTs(v.entry_time)) }),
+          el("dt", { text: "Mark" }), el("dd", { text: px(mark) }),
+          el("dt", { text: "Value / P&L" }), el("dd", { class: toneOf(pnl), text: usd(mark !== null ? v.qty * mark : null) + " / " + usd(mark !== null && isNum(v.entry_px) ? v.qty * (mark - v.entry_px) : null) }),
+          el("dt", { text: "Catastrophe stop" }), el("dd", { class: near ? "neg" : "", text: px(v.stop) + " (" + pct(toStop) + (near ? ", within 5%" : "") + ")" }),
+          el("dt", { text: "Sleeve weight / ATR" }), el("dd", { text: pct(v.weight, false) + " / " + px(v.atr) }),
+          el("dt", { text: "Shadow qty" }), el("dd", { text: qty(shq) })
+        ])
+      ]);
+    });
+    replace("positions", el("div", { class: "cards" }, cards));
+  }
+
+  function renderSignals(b, d) {
+    const s = d.s;
+    const eq = d.lastMark ? d.lastMark.equity : s ? equityFallback(s).eq : null;
+    const cards = d.products.map((p) => {
+      const x = d.latest("decision", p);
+      if (!x || !isNum(x.close) || !isNum(x.sma)) return el("div", { class: "panel", "data-testid": "signal-" + p }, [el("h3", { text: p }), el("div", { class: "muted", text: "No signal yet: waiting for the first daily decision." })]);
+      const rel = x.close / x.sma - 1;
+      const above = x.long === true;
+      const w = isNum(x.weight) ? x.weight : null;
+      const latch = s && s.stopped_latch && s.stopped_latch[p];
+      return el("div", { class: "panel", "data-testid": "signal-" + p }, [
+        el("div", { class: "sechead", style: "margin:0" }, [el("h3", { text: p }), el("span", { class: "badge " + (above ? "tone-pass" : "tone-muted"), text: above ? "Trend: above SMA50 (long)" : "Trend: below SMA50 (flat)" })]),
+        latch ? el("div", { class: "badge tone-warn", style: "margin-top:6px" }, ["Waiting for trend reset after a stop"]) : null,
+        el("dl", { class: "kv" }, [
+          el("dt", { text: "Daily bar" }), el("dd", { text: x.bar || DASH }),
+          el("dt", { text: "Close / SMA50" }), el("dd", { text: px(x.close) + " / " + px(x.sma) }),
+          el("dt", { text: "Close vs SMA50" }), el("dd", { class: toneOf(rel), text: pct(rel) }),
+          el("dt", { text: "Distance to flip" }), el("dd", { text: pct(x.sma / x.close - 1) + " move" }),
+          el("dt", { text: "30-day volatility" }), el("dd", { text: pct1(x.vol30) }),
+          el("dt", { text: "Would-be size if long" }), el("dd", { text: pct(w, false) + " of sleeve = " + pct(w !== null ? w * LIMITS.sleeve : null, false) + " of equity" + (w !== null && isNum(eq) ? " (" + usd(w * LIMITS.sleeve * eq) + ")" : "") })
+        ]),
+        el("div", { class: "muted", style: "font-size:.8rem;margin-top:8px" }, ["Informational only: what the strategy would size if it were long. Decided " + fmtTime(x._t) + "."])
+      ]);
+    });
+    replace("signals", ...cards);
+  }
+
+  function renderCurve(b, d) {
+    const box = document.getElementById("curve");
+    let marks = d.marks;
+    if (range && marks.length) { const cut = marks[marks.length - 1]._t - range * 86400000; marks = marks.filter((m) => m._t >= cut); }
+    if (marks.length < 2) { box.replaceChildren(el("div", { class: "empty", "data-testid": "curve-placeholder" }, ["Not enough history yet (" + marks.length + " mark" + (marks.length === 1 ? "" : "s") + ")."])); return; }
+    const step = Math.max(1, Math.ceil(marks.length / 1000));
+    const pts = marks.filter((_, i) => i % step === 0 || i === marks.length - 1);
+    const start = d.s && isNum(d.s.start_equity) ? d.s.start_equity : START_EQUITY_DEFAULT;
+    const vals = pts.flatMap((m) => [m.equity, isNum(m.shadow_equity) ? m.shadow_equity : m.equity]).concat([start]);
+    let lo = Math.min(...vals), hi = Math.max(...vals);
+    const mid = (lo + hi) / 2;
+    if (hi - lo < mid * 0.02) { lo = Math.min(lo, mid * 0.99); hi = Math.max(hi, mid * 1.01); }
+    const W = 1000, H = 260, PL = 70, PR = 12, PT = 12, PB = 26;
+    const t0 = pts[0]._t, t1 = pts[pts.length - 1]._t;
+    const X = (t) => PL + (W - PL - PR) * (t1 === t0 ? 0.5 : (t - t0) / (t1 - t0));
+    const Y = (v) => PT + (H - PT - PB) * (1 - (v - lo) / (hi - lo));
+    const svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", role: "img", "aria-label": "Equity curve from " + fmtTime(t0) + " to " + fmtTime(t1) + ": maker " + usd(pts[pts.length - 1].equity) + ", start " + usd(start) + "." });
+    const g = svgEl("g", { class: "axis" });
+    [lo, (lo + hi) / 2, hi].forEach((v) => { g.append(svgEl("line", { x1: PL, x2: W - PR, y1: Y(v), y2: Y(v), stroke: "var(--line)", "stroke-width": 1 })); const tx = svgEl("text", { x: 4, y: Y(v) + 4 }); tx.textContent = "$" + Math.round(v).toLocaleString("en-US"); g.append(tx); });
+    [t0, t1].forEach((t, i) => { const tx = svgEl("text", { x: i ? W - PR : PL, y: H - 6, "text-anchor": i ? "end" : "start" }); tx.textContent = fmtTime(t).slice(0, 10); g.append(tx); });
+    svg.append(g);
+    svg.append(svgEl("line", { x1: PL, x2: W - PR, y1: Y(start), y2: Y(start), stroke: "var(--muted)", "stroke-dasharray": "2 4", "stroke-width": 1.5, "data-testid": "curve-baseline", "vector-effect": "non-scaling-stroke" }));
+    const path = (key, attrs) => { let dd = ""; pts.forEach((m, i) => { const v = isNum(m[key]) ? m[key] : m.equity; dd += (i ? "L" : "M") + X(m._t).toFixed(1) + " " + Y(v).toFixed(1); }); svg.append(svgEl("path", Object.assign({ d: dd, fill: "none", "vector-effect": "non-scaling-stroke" }, attrs))); };
+    path("shadow_equity", { stroke: "var(--muted)", "stroke-width": 1.5, "stroke-dasharray": "5 4" });
+    path("equity", { stroke: "var(--accent)", "stroke-width": 2.2, "data-testid": "curve-maker" });
+    d.L.filter((r) => (r.type === "fill" || r.type === "kill" || r.type === "freeze") && r._t >= t0 && r._t <= t1).forEach((r) => {
+      const near = pts.reduce((a, m) => (Math.abs(m._t - r._t) < Math.abs(a._t - r._t) ? m : a), pts[0]);
+      const col = r.type === "fill" ? (r.side === "buy" ? "var(--pass)" : "var(--fail)") : "var(--warn)";
+      svg.append(svgEl("circle", { cx: X(r._t), cy: Y(near.equity), r: 5, fill: col, class: "marker marker-" + r.type, "vector-effect": "non-scaling-stroke" }));
+    });
+    const cursor = svgEl("line", { y1: PT, y2: H - PB, stroke: "var(--ink)", "stroke-width": 1, opacity: 0, "vector-effect": "non-scaling-stroke" });
+    svg.append(cursor);
+    const readout = el("div", { class: "readout hidden", "data-testid": "curve-readout", "aria-live": "polite" });
+    const wrap = el("div", { class: "chartbox" }, [svg, readout]);
+    const peakMax = Math.max(...pts.map((m) => m.equity));
+    const onPoint = (ev) => {
+      const r = svg.getBoundingClientRect();
+      const cx = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left) / r.width * W;
+      const t = t0 + (Math.min(Math.max(cx, PL), W - PR) - PL) / (W - PL - PR) * (t1 - t0);
+      let best = pts[0]; pts.forEach((m) => { if (Math.abs(m._t - t) < Math.abs(best._t - t)) best = m; });
+      const runPeak = Math.max(...pts.filter((m) => m._t <= best._t).map((m) => m.equity));
+      cursor.setAttribute("x1", X(best._t)); cursor.setAttribute("x2", X(best._t)); cursor.setAttribute("opacity", 0.4);
+      readout.textContent = fmtTime(best._t) + " · maker " + usd(best.equity) + " · shadow " + usd(isNum(best.shadow_equity) ? best.shadow_equity : null) + " · dd " + pct(best.equity / runPeak - 1);
+      readout.classList.remove("hidden");
+    };
+    svg.addEventListener("mousemove", onPoint); svg.addEventListener("click", onPoint); svg.addEventListener("touchstart", onPoint, { passive: true });
+    svg.addEventListener("mouseleave", () => { readout.classList.add("hidden"); cursor.setAttribute("opacity", 0); });
+    const legend = el("div", { class: "legend" }, [
+      el("span", {}, [el("i", { style: "border-color:var(--accent)" }), "Maker equity"]),
+      el("span", {}, [el("i", { style: "border-color:var(--muted);border-top-style:dashed" }), "Taker shadow"]),
+      el("span", {}, [el("i", { style: "border-color:var(--muted);border-top-style:dotted" }), "Start " + usd(start)]),
+      el("span", { text: "Peak " + usd(peakMax) + " · " + marks.length + " marks" })
+    ]);
+    box.replaceChildren(wrap, legend);
+  }
+
+  function renderHistory(b, d) {
+    const fills = d.L.filter((r) => r.type === "fill");
+    const blocked = d.L.filter((r) => (r.type === "order" && r.approved === false) || r.type === "skip" || r.type === "stop");
+    if (!fills.length && !blocked.length) return replace("history", el("div", { class: "panel empty", "data-testid": "history-empty" }, ["No trades yet. The strategy expects about 5–6 trades over 90 days."]));
+    const open = {}; const rows = [];
+    fills.forEach((f) => {
+      if (f.side === "buy") { open[f.product] = f; rows.push({ f, kind: "entry", t: f._t }); }
+      else {
+        const e = open[f.product]; delete open[f.product];
+        const pnl = e && isNum(f.proceeds) && isNum(e.notional) ? f.proceeds - e.notional : null;
+        const shp = e && isNum(f.shadow_proceeds) && isNum(e.shadow_qty) && isNum(e.taker_px) ? f.shadow_proceeds - e.shadow_qty * e.taker_px / (1 - 0.009) : null;
+        rows.push({ f, e, pnl, shp, t: f._t });
+      }
+    });
+    blocked.forEach((r) => rows.push({ blocked: r, t: r._t }));
+    rows.sort((a, b2) => b2.t - a.t);
+    const head = el("tr", {}, ["Time", "Coin", "Side / kind", "Qty", "Maker px", "Taker px", "Daily open", "Gap vs open", "Fee", "Amount", "Realized P&L (maker / shadow)"].map((h, i) => el("th", { class: i >= 3 ? "num" : "", text: h })));
+    const body = rows.map((r) => {
+      if (r.blocked) {
+        const x = r.blocked;
+        const what = x.type === "order" ? "rejected " + (x.kind || "") + " " + (x.side || "") : x.type;
+        const why = x.why || x.reason || (x.type === "stop" ? "hourly close " + px(x.hourly_close) + " at/below stop " + px(x.stop) : DASH);
+        return el("tr", { class: "mutedrow" }, [el("td", { class: "mono", text: fmtTime(x._t) }), el("td", { text: x.product || DASH }), el("td", { text: what }), el("td", { colspan: 8, style: "white-space:normal", text: why })]);
+      }
+      const f = r.f;
+      const amount = f.side === "buy" ? usd(f.notional) : usd(f.proceeds);
+      const isOpen = f.side === "buy" && d.s && d.s.positions && d.s.positions[f.product] && !rows.some((o) => o.e === f);
+      const pnlCell = f.side === "buy" ? (isOpen ? "open" : "closed") : usd(r.pnl) + " / " + usd(r.shp);
+      return el("tr", {}, [
+        el("td", { class: "mono", text: fmtTime(f._t) }), el("td", { text: f.product }), el("td", { text: f.side + " · " + f.kind }),
+        el("td", { class: "num", text: qty(f.qty) }), el("td", { class: "num", text: px(f.maker_px) }), el("td", { class: "num", text: px(f.taker_px) }),
+        el("td", { class: "num", text: px(f.ref_open) }), el("td", { class: "num", text: pct(f.maker_gap_vs_open) }), el("td", { class: "num", text: usd(f.maker_fee) }),
+        el("td", { class: "num", text: amount }), el("td", { class: "num " + toneOf(r.pnl), text: pnlCell })
+      ]);
+    });
+    replace("history", el("div", { class: "tablebox" }, [el("table", {}, [el("thead", {}, [head]), el("tbody", {}, body)])]));
+  }
+
+  function renderTracking(b, d) {
+    const rep = b.report;
+    const rows = d.products.map((p) => {
+      const fills = d.L.filter((r) => r.type === "fill" && r.product === p && (r.kind === "entry" || r.kind === "exit") && isNum(r.maker_gap_vs_open));
+      const gaps = fills.map((r) => Math.abs(r.maker_gap_vs_open)).sort((a, x) => a - x);
+      const med = gaps.length ? (gaps.length % 2 ? gaps[(gaps.length - 1) / 2] : (gaps[gaps.length / 2 - 1] + gaps[gaps.length / 2]) / 2) : null;
+      const worst = gaps.length ? gaps[gaps.length - 1] : null;
+      const r = rep && rep.rows ? rep.rows[p] : null;
+      const m = r ? r.match : null;
+      const mTone = m === "yes" ? "pos" : m === "NO" ? "neg" : "";
+      const gapCell = (v, lim) => el("td", { class: "num " + (v === null ? "" : v <= lim ? "pos" : "neg"), text: v === null ? DASH : pct(v, false) + (v <= lim ? " ✓" : " ✗") });
+      return el("tr", { "data-testid": "tracking-" + p }, [
+        el("td", { text: p }), el("td", { class: mTone, text: m || "unavailable" }),
+        el("td", { class: "num", text: r ? r.expected : DASH }), el("td", { class: "num", text: r ? r.actual : String(d.L.filter((x) => x.type === "fill" && x.product === p && (x.kind === "entry" || x.kind === "exit")).length) }),
+        gapCell(med, LIMITS.medGap), gapCell(worst, LIMITS.worstGap), el("td", { class: "num", text: r ? r.stops : DASH })
+      ]);
+    });
+    const head = el("tr", {}, ["Coin", "Signal match", "Expected trades", "Actual trades", "Median gap (≤0.30%)", "Worst gap (≤1%)", "Stops/kills"].map((h, i) => el("th", { class: i >= 2 ? "num" : "", text: h })));
+    const notes = [];
+    if (!rep) notes.push("report.md isn't available yet, so signal match comes from nowhere; fill gaps are computed from the ledger.");
+    else if (!rep.rows) notes.push("report.md has no tracking table yet.");
+    else if (rep.updated !== null && d.lastMark && rep.updated < d.lastMark._t - 60000) notes.push("report.md was written before the latest mark; it may be one run behind.");
+    notes.push("Signal match is taken from report.md (it needs candle data to replay the backtest). Gaps are recomputed here from ledger fills.");
+    replace("tracking", el("div", { class: "tablebox" }, [el("table", {}, [el("thead", {}, [head]), el("tbody", {}, rows)])]), ...notes.map((n) => el("p", { class: "muted", style: "font-size:.85rem;margin:8px 0 0", text: n })));
+
+    let maxGap = 0, gapAt = null;
+    for (let i = 1; i < d.marks.length; i++) { const g = d.marks[i]._t - d.marks[i - 1]._t; if (g > maxGap) { maxGap = g; gapAt = d.marks[i]._t; } }
+    const errs30 = d.L.filter((r) => r.type === "error" && now() - r._t < 30 * 86400000).length;
+    const freezes = d.L.filter((r) => r.type === "freeze").length;
+    const gh = maxGap / 3600000;
+    replace("reliability", el("div", { class: "eyebrow", text: "Reliability" }), el("dl", { class: "kv" }, [
+      el("dt", { text: "Longest gap between runs" }), el("dd", { class: gh > STALE_H ? "neg" : "", text: d.marks.length > 1 ? gh.toFixed(1) + "h" + (gh > STALE_H ? " (above 26h, ending " + fmtTime(gapAt) + ")" : "") : DASH }),
+      el("dt", { text: "Data errors, last 30 days" }), el("dd", { text: String(errs30) }),
+      el("dt", { text: "Freezes" }), el("dd", { text: String(freezes) })
+    ]));
+  }
+
+  let alertsAll = false;
+  function severity(text) {
+    if (/^KILL|FROZEN|Heartbeat gap|REFUSED/i.test(text)) return ["critical", "fail"];
+    if (/Order rejected|Daily loss|Data errors|passed without a run/i.test(text)) return ["warning", "warn"];
+    if (/^PAPER (BUY|SELL)/.test(text)) return ["trade", "pass"];
+    return ["info", "info"];
+  }
+  function renderAlerts(b) {
+    const box = document.getElementById("alerts");
+    const g = b.alerts || [];
+    if (!g.length) { box.replaceChildren(el("div", { class: "empty", "data-testid": "alerts-empty" }, [b.errors.alerts ? "No alerts loaded (alerts.md: " + b.errors.alerts + ")." : "No alerts yet."])); return; }
+    const shown = alertsAll ? g : g.slice(0, 10);
+    const kids = shown.map((grp) => el("div", { class: "alertgroup" }, [
+      el("h3", { text: grp.t !== null ? fmtTime(grp.t) : grp.head }),
+      el("ul", {}, grp.items.map((it) => { const [lab, tone] = severity(it); return el("li", {}, [el("span", { class: "badge tone-" + tone, text: lab }), el("span", { text: it })]); }))
+    ]));
+    if (g.length > 10) {
+      const t = el("button", { type: "button", "data-testid": "alerts-toggle", style: "margin-top:10px" }, [alertsAll ? "Show latest 10" : "Show all (" + g.length + ")"]);
+      t.addEventListener("click", () => { alertsAll = !alertsAll; renderAlerts(data); });
+      kids.push(t);
+    }
+    box.replaceChildren(...kids);
+  }
+
+  // ---------- theme ----------
+  const themeSel = document.getElementById("theme");
+  function applyTheme(v) { if (v === "light" || v === "dark") document.documentElement.setAttribute("data-theme", v); else document.documentElement.removeAttribute("data-theme"); }
+  let saved = "auto";
+  try { saved = localStorage.getItem("ptd-theme") || "auto"; } catch (e) { saved = "auto"; }
+  themeSel.value = ["auto", "light", "dark"].includes(saved) ? saved : "auto"; applyTheme(themeSel.value);
+  themeSel.addEventListener("change", () => { applyTheme(themeSel.value); try { localStorage.setItem("ptd-theme", themeSel.value); } catch (e) { /* storage unavailable: theme still applies this visit */ } });
+
+  // ---------- fonts (non-blocking) ----------
+  const fl = document.createElement("link");
+  fl.rel = "stylesheet";
+  fl.href = "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap";
+  document.head.append(fl);
+
+  // ---------- wiring ----------
+  document.getElementById("refresh").addEventListener("click", () => load(true));
+  document.querySelectorAll("[data-range]").forEach((btn) => btn.addEventListener("click", () => {
+    range = Number(btn.dataset.range);
+    document.querySelectorAll("[data-range]").forEach((x) => x.setAttribute("aria-pressed", x === btn ? "true" : "false"));
+    if (data) renderCurve(data, derive(data));
+  }));
+  window.addEventListener("online", () => data && render());
+  window.addEventListener("offline", () => data && render());
+  function schedule() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => { if (document.visibilityState === "visible") load(true); }, 5 * 60 * 1000);
+  }
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && data && Date.now() - data.fetchedAt > 5 * 60 * 1000) load(true); });
+  schedule();
+  load(false);
+})();
+</script>
+</body>
+</html>
