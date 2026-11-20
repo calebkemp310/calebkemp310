@@ -30,6 +30,9 @@ It's read-only: it never places or suggests orders, and it needs no keys.
 - **Alerts:** from alerts.md, newest first, each tagged by severity.
 
 ## Open it
+**On your phone:** https://claude.ai/artifact/HGNKRjAjGvDyi4GH6acmkt (private Claude page). It's a snapshot, not live: the page says which run it shows, and Claude refreshes it on request by republishing the four data files with `make_artifact_copy.py`.
+
+**Live, on a computer:**
 Open `index.html` from a local server. Fetching the data files doesn't work from `file://`.
 
 ```
