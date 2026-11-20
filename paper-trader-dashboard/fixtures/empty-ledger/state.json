@@ -1,0 +1,29 @@
+{
+ "armed": true,
+ "cash": 10000.0,
+ "daily_loss_alerted": null,
+ "day": "2026-11-13",
+ "day_start_equity": 10000.0,
+ "entries_today": {},
+ "errors": {
+  "consecutive": 0,
+  "recent": []
+ },
+ "frozen": false,
+ "last_processed_bar": null,
+ "last_run": null,
+ "last_success": null,
+ "peak_equity": 10000.0,
+ "positions": {},
+ "shadow": {
+  "cash": 10000.0,
+  "positions": {}
+ },
+ "start_equity": 10000.0,
+ "started": "2026-11-07T12:26:00.646361+00:00",
+ "stopped_latch": {
+  "BTC-USD": false,
+  "ETH-USD": false
+ },
+ "version": 1
+}
