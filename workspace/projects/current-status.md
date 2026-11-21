@@ -1,6 +1,6 @@
 # Current Status
 
-_Last updated: 2026-11-13_
+_Last updated: 2026-11-20_
 
 - Money Monday Screener: first version merged (PR #1). No open follow-ups recorded yet.
 - Memory system: repo folders merged (PR #2); now linked to Notion Memory as the shared brain.
@@ -11,3 +11,4 @@ _Last updated: 2026-11-13_
 - Trading agent: Gate 1 + Round 2 done (`trading-agent/SPEC.md` section 11). Best = `vol_target_trend` (WATCH, fails luck test only). Paper trader built (Gate 4); goes live hourly once merged to main. Next: drills (kill from phone, stale feed), weekly heartbeat routine, then 90+ days of paper tracking.
 - Cloud environment now also allows data-api.binance.vision, data.binance.vision, api.exchange.coinbase.com, api.coinbase.com.
 - Paper trader dashboard: `paper-trader-dashboard/index.html` (read-only, live from the paper-trading branch, fixtures + README). Built directly from the PGE spec after Caleb chose a lighter build over God Mode; one code review, fixes applied. PGE files stay in the ignored `pge-workspace/`.
+- Dashboard on phone: private artifact https://claude.ai/artifact/HGNKRjAjGvDyi4GH6acmkt (snapshot; artifacts can't fetch GitHub, so refresh = republish data files). Paper trader still flat in cash on 2026-11-20 while BTC -18% / ETH -22% since start.
