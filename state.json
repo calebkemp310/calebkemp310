@@ -1,7 +1,7 @@
 {
  "armed": true,
  "cash": 10000.0,
- "checksum": "ac952e2207011318ee7ff57f7a3cfb16e41270b5e46c5728d1366dc4347d62a8",
+ "checksum": "cafede866fdbfbab4063c5d33b86cd80d6d225227e63731adc3b6b222ed58d98",
  "daily_loss_alerted": null,
  "day": "2026-11-22",
  "day_start_equity": 10000.0,
@@ -15,8 +15,8 @@
   "BTC-USD": "2026-11-21",
   "ETH-USD": "2026-11-21"
  },
- "last_run": "2026-11-22T15:14:59.023414+00:00",
- "last_success": "2026-11-22T15:14:59.023414+00:00",
+ "last_run": "2026-11-22T21:43:05.892382+00:00",
+ "last_success": "2026-11-22T21:43:05.892382+00:00",
  "peak_equity": 10000.0,
  "positions": {},
  "shadow": {
