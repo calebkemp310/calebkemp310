@@ -10,3 +10,6 @@
 
 ## 2026-11-16 02:41 UTC
 - Weekly summary: equity $10,000.00 (+0.00% since start), taker-shadow $10,000.00, positions: none (cash).
+
+## 2026-11-23 02:38 UTC
+- Weekly summary: equity $10,000.00 (+0.00% since start), taker-shadow $10,000.00, positions: none (cash).
