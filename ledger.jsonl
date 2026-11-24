@@ -224,3 +224,6 @@
 {"block_entries": false, "equity": 10000.0, "mode": "ok", "peak": 10000.0, "prices": {"BTC-USD": 61220.925, "ETH-USD": 1708.935}, "reasons": [], "shadow_equity": 10000.0, "ts": "2026-11-24T00:46:09.540300+00:00", "type": "mark"}
 {"atr": 3109.4207651733145, "bar": "2026-11-23", "close": 61189.97, "long": false, "product": "BTC-USD", "ref_open": 61190.81, "sma": 76158.2166, "ts": "2026-11-24T00:46:09.540300+00:00", "type": "decision", "vol30": 0.47300341476490615, "weight": 0.63424489260634}
 {"atr": 114.18979930804716, "bar": "2026-11-23", "close": 1708.5, "long": false, "product": "ETH-USD", "ref_open": 1708.33, "sma": 2225.5728, "ts": "2026-11-24T00:46:09.540300+00:00", "type": "decision", "vol30": 0.6618057458892318, "weight": 0.45330522115202637}
+{"gap": -0.0013213443961108684, "product": "BTC-USD", "source": "binance", "ts": "2026-11-24T10:51:12.838140+00:00", "type": "crosscheck"}
+{"gap": -0.0012568321982872055, "product": "ETH-USD", "source": "binance", "ts": "2026-11-24T10:51:12.838140+00:00", "type": "crosscheck"}
+{"block_entries": false, "equity": 10000.0, "mode": "ok", "peak": 10000.0, "prices": {"BTC-USD": 59428.494999999995, "ETH-USD": 1675.055}, "reasons": [], "shadow_equity": 10000.0, "ts": "2026-11-24T10:51:12.838140+00:00", "type": "mark"}
